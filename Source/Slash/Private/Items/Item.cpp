@@ -14,6 +14,7 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UE_LOG(LogTemp, Warning, TEXT("BeginPlayCalled"));
 }
 
 void AItem::Tick(float DeltaTime)
