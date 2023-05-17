@@ -9,7 +9,7 @@ public class SlashTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-
-		ExtraModuleNames.AddRange( new string[] { "Slash" } );
+        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
+        ExtraModuleNames.AddRange( new string[] { "Slash" } );
 	}
 }

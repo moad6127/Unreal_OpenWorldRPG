@@ -20,26 +20,16 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UE_LOG(LogTemp, Warning, TEXT("BeginPlayCalled"));
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(1, 60.f, FColor::Red, FString("Item OnScreen Message!"));
-	}
-
 	UWorld* World = GetWorld();
-
 	FVector Location = GetActorLocation();
+	FVector Forward = GetActorForwardVector();
+
 	DRAW_SPHERE(Location)
+	DRAW_LINE(Location, Location + Forward * 100.f)
 }
 
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (GEngine)
-	{
-		FString Message = FString::Printf(TEXT("DeltaTime : %f"), DeltaTime);
-		GEngine->AddOnScreenDebugMessage(1, 60.f, FColor::Red, Message);
-	}
 }
 
