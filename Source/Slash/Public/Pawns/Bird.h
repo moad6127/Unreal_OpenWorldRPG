@@ -23,6 +23,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	void MoveForward(float Value);
+
+
 private:
 
 	UPROPERTY(VisibleAnywhere)
