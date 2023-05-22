@@ -58,14 +58,14 @@ void ABird::Move(const FInputActionValue& Value)
 	}
 }
 
-void ABird::Turn(float Value)
+void ABird::Look(const FInputActionValue& Value)
 {
-	AddControllerYawInput(Value);
-}
-
-void ABird::Lookup(float Value)
-{
-	AddControllerPitchInput(Value);
+	const FVector2D LookAxisValue =  Value.Get<FVector2D>();
+	if (GetController())
+	{
+		AddControllerYawInput(LookAxisValue.X);
+		AddControllerPitchInput(LookAxisValue.Y);
+	}
 }
 
 void ABird::Tick(float DeltaTime)
@@ -81,9 +81,7 @@ void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABird::Look);
 	}
-
-	PlayerInputComponent->BindAxis(FName("Turn"), this, &ABird::Turn);
-	PlayerInputComponent->BindAxis(FName("Lookup"), this, &ABird::Lookup);
 }
 
