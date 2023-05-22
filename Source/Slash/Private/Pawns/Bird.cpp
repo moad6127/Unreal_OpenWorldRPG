@@ -58,6 +58,16 @@ void ABird::Move(const FInputActionValue& Value)
 	}
 }
 
+void ABird::Turn(float Value)
+{
+	AddControllerYawInput(Value);
+}
+
+void ABird::Lookup(float Value)
+{
+	AddControllerPitchInput(Value);
+}
+
 void ABird::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -72,5 +82,8 @@ void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
 	}
+
+	PlayerInputComponent->BindAxis(FName("Turn"), this, &ABird::Turn);
+	PlayerInputComponent->BindAxis(FName("Lookup"), this, &ABird::Lookup);
 }
 

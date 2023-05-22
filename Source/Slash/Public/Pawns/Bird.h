@@ -36,6 +36,10 @@ protected:
 	UInputAction* MoveAction;
 
 	void Move(const FInputActionValue& Value);
+
+	void Turn(float Value);
+	void Lookup(float Value);
+
 private:
 
 	UPROPERTY(VisibleAnywhere)
