@@ -17,6 +17,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
+	void MoveForward(float Value);
+
+protected:
 	virtual void BeginPlay() override;
 
 
