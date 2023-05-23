@@ -5,6 +5,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/InputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
 ASlashCharacter::ASlashCharacter()
 {
@@ -29,6 +32,14 @@ void ASlashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			SubSystem->AddMappingContext(SlashContext, 0);
+		}
+	}
 }
 
 void ASlashCharacter::Tick(float DeltaTime)
@@ -41,44 +52,34 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ASlashCharacter::MoveForward);
-	PlayerInputComponent->BindAxis(FName("MoveRight"), this, &ASlashCharacter::MoveRight);
-	PlayerInputComponent->BindAxis(FName("Turn"), this, &ASlashCharacter::Turn);
-	PlayerInputComponent->BindAxis(FName("Lookup"), this, &ASlashCharacter::LookUp);
-
-}
-
-void ASlashCharacter::MoveForward(float Value)
-{
-	if (Controller && (Value != 0.f))
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		const FRotator ControlRotation = GetControlRotation();
-		const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
-
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
+		EnhancedInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Look);
 	}
-}
 
-void ASlashCharacter::MoveRight(float Value)
+}
+void ASlashCharacter::Move(const FInputActionValue& Value)
 {
-	if (Controller && (Value != 0.f))
-	{
-		const FRotator ControlRotation = GetControlRotation();
-		const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
+	const FVector2D MovementVector = Value.Get<FVector2D>();
 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		AddMovementInput(Direction, Value);
-	}
+	const FRotator ControlRotation = GetControlRotation();
+	const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
+
+	const FVector DirectionForward = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	AddMovementInput(DirectionForward, MovementVector.Y);
+
+	const FVector DirectionRight = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	AddMovementInput(DirectionRight, MovementVector.X);
 }
 
-void ASlashCharacter::Turn(float Value)
+void ASlashCharacter::Look(const FInputActionValue& Value)
 {
-	AddControllerYawInput(Value);
+	const FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+	AddControllerPitchInput(LookAxisVector.Y);
+	AddControllerYawInput(LookAxisVector.X);
 }
 
-void ASlashCharacter::LookUp(float Value)
-{
-	AddControllerPitchInput(Value);
-}
+
 
