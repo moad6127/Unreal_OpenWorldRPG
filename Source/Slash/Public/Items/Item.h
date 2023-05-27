@@ -35,7 +35,7 @@ protected:
 	T Avg(T First, T Second);
 
 	UFUNCTION()
-	void OnSphereOverlap(
+	virtual void OnSphereOverlap(
 		UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
@@ -44,7 +44,7 @@ protected:
 		const FHitResult& SweepResult);
 
 	UFUNCTION()
-	void OnSphereEndOverlap(
+	virtual void OnSphereEndOverlap(
 		UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
