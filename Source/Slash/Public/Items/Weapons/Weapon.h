@@ -13,6 +13,9 @@ UCLASS()
 class SLASH_API AWeapon : public AItem
 {
 	GENERATED_BODY()
+
+public:
+	void Equip(USceneComponent* InParent, FName InSocketName);
 	
 protected:
 
