@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "CharacterType.h"
 #include "SlashCharacter.generated.h"
 
 class USpringArmComponent;
@@ -13,6 +14,8 @@ class UInputMappingContext;
 class UInputAction;
 class UGroomComponent;
 class AItem;
+
+
 
 UCLASS()
 class SLASH_API ASlashCharacter : public ACharacter
@@ -28,14 +31,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	/**
-	*  Input 
-	*/
-	void MoveForward(float Value);
-	void MoveRight(float Value);
-	void Turn(float Value);
-	void LookUp(float Value);
-	void EKeyPressed();
+
 
 	/**
 	* Enhanced Input
@@ -58,7 +54,10 @@ protected:
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void EKeyPressed();
 private:
+
+	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
@@ -77,4 +76,5 @@ private:
 
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
+	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
 };
