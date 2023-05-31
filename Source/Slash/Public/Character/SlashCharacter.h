@@ -14,7 +14,7 @@ class UInputMappingContext;
 class UInputAction;
 class UGroomComponent;
 class AItem;
-
+class UAnimMontage;
 
 
 UCLASS()
@@ -31,6 +31,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/**
+	* Input
+	*/
 
 
 	/**
@@ -52,9 +55,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* FKeyAction;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* AttackAction;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void EKeyPressed();
+	void Attack();
 private:
 
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
@@ -73,6 +80,13 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+
+	/**
+	* Animation Montage
+	*/
+
+	UPROPERTY(EditDefaultsOnly,Category = Montage)
+	UAnimMontage* AttackMontage;
 
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
