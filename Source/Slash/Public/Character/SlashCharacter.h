@@ -62,9 +62,17 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void EKeyPressed();
 	void Attack();
+
+	/**
+	* Play montage functions;
+	*/
+	void PlayAttackMontage();
 private:
 
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EActionState ActionsState = EActionState::EAS_Unoccupied;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
@@ -87,7 +95,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly,Category = Montage)
 	UAnimMontage* AttackMontage;
-
+	
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+	bool CanAttack();
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
