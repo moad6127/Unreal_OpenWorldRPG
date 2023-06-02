@@ -15,6 +15,7 @@ class UInputAction;
 class UGroomComponent;
 class AItem;
 class UAnimMontage;
+class AWeapon;
 
 
 UCLASS()
@@ -60,13 +61,22 @@ protected:
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-	void EKeyPressed();
+	void FKeyPressed();
 	void Attack();
 
 	/**
 	* Play montage functions;
 	*/
 	void PlayAttackMontage();
+	void PlayEquipMontage(FName SectionName);
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+
+	bool CanAttack();
+
+	bool CanDisarm();
+	bool CanArm();
 private:
 
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
@@ -89,16 +99,21 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	AWeapon* EquippedWeapon;
+
 	/**
 	* Animation Montage
 	*/
 
 	UPROPERTY(EditDefaultsOnly,Category = Montage)
 	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Montage)
+	UAnimMontage* EquipMontage;
+
 	
-	UFUNCTION(BlueprintCallable)
-	void AttackEnd();
-	bool CanAttack();
+
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
