@@ -6,6 +6,7 @@
 #include "Items/Item.h"
 #include "Weapon.generated.h"
 
+class USoundBase;
 /**
  * 
  */
@@ -35,4 +36,9 @@ protected:
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex) override;
+
+private:
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	USoundBase* EquipSound;
 };
