@@ -79,7 +79,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 }
 void ASlashCharacter::Move(const FInputActionValue& Value)
 {
-	if (ActionsState == EActionState::EAS_Attacking)
+	if (ActionState != EActionState::EAS_Unoccupied)
 	{
 		return;
 	}
@@ -119,11 +119,13 @@ void ASlashCharacter::FKeyPressed()
 		{
 			PlayEquipMontage(FName("UnEquip"));
 			CharacterState = ECharacterState::ECS_Unequipped;
+			ActionState = EActionState::EAS_EquippingWeapon;
 		}
 		else if (CanArm())
 		{
 			PlayEquipMontage(FName("Equip"));
 			CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+			ActionState = EActionState::EAS_EquippingWeapon;
 		}
 	}
 }
@@ -133,29 +135,50 @@ void ASlashCharacter::Attack()
 	if (CanAttack())
 	{
 		PlayAttackMontage();
-		ActionsState = EActionState::EAS_Attacking;
+		ActionState = EActionState::EAS_Attacking;
 
 	}
 
 }
 bool ASlashCharacter::CanAttack()
 {
-	return ActionsState == EActionState::EAS_Unoccupied && 
+	return ActionState == EActionState::EAS_Unoccupied && 
 		CharacterState != ECharacterState::ECS_Unequipped;
 }
 
 bool ASlashCharacter::CanDisarm()
 {
-	return ActionsState == EActionState::EAS_Unoccupied && 
+	return ActionState == EActionState::EAS_Unoccupied && 
 		CharacterState != ECharacterState::ECS_Unequipped;
 
 }
 
 bool ASlashCharacter::CanArm()
 {
-	return ActionsState == EActionState::EAS_Unoccupied&&
+	return ActionState == EActionState::EAS_Unoccupied&&
 		CharacterState == ECharacterState::ECS_Unequipped && 
 		EquippedWeapon;
+}
+
+void ASlashCharacter::Disarm()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("SpineSocket"));
+	}
+}
+
+void ASlashCharacter::Arm()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+	}
+}
+
+void ASlashCharacter::FinishEquipping()
+{
+	ActionState = EActionState::EAS_Unoccupied;
 }
 
 void ASlashCharacter::PlayAttackMontage()
@@ -194,7 +217,7 @@ void ASlashCharacter::PlayEquipMontage(FName SectionName)
 
 void ASlashCharacter::AttackEnd()
 {
-	ActionsState = EActionState::EAS_Unoccupied;
+	ActionState = EActionState::EAS_Unoccupied;
 }
 
 

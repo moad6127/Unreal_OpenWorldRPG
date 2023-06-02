@@ -77,12 +77,21 @@ protected:
 
 	bool CanDisarm();
 	bool CanArm();
+
+	UFUNCTION(BlueprintCallable)
+	void Disarm();
+
+	UFUNCTION(BlueprintCallable)
+	void Arm();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishEquipping();
 private:
 
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	EActionState ActionsState = EActionState::EAS_Unoccupied;
+	EActionState ActionState = EActionState::EAS_Unoccupied;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
