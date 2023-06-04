@@ -5,7 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Slash/DebugMacros.h"
-
+#include "Kismet/KismetSystemLibrary.h"
 
 
 AEnemy::AEnemy()
@@ -53,5 +53,25 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 {
 	DRAW_SPHERE_COLOR(ImpactPoint,FColor::Orange);
 	PlayHitReactMontage(FName("FromLeft"));
+
+	const FVector Forward = GetActorForwardVector();
+	const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
+	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
+
+	// Forward * ToHit = |Forword||ToHit| * Cos(theta)
+	// |Forward| = 1, |ToHit| = 1 , Forward * ToHit = Cos(theta)
+	const double CosTheta = FVector::DotProduct(Forward, ToHit);
+	// 역삼각함수를 취해서 각도 구하기
+	double Theta = FMath::Acos(CosTheta);
+	//contert from radians to degrees
+	Theta = FMath::RadiansToDegrees(Theta);
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("Theta: %f"), Theta));
+	}
+	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 60.f, 5.f, FColor::Red, 5.f);
+	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 60.f, 5.f, FColor::Green, 5.f);
+
 }
 
