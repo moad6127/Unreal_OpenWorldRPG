@@ -62,6 +62,9 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* BoxTraceEnd;
 
+	TArray<AActor*> IgnoreActors;
+
 public:
 	FORCEINLINE UBoxComponent* GetWeaponBox() const { return WeaponBox; }
+	FORCEINLINE TArray<AActor*>* GetIgnoreActors() { return &IgnoreActors; }
 };
