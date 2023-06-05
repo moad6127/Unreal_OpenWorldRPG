@@ -196,7 +196,7 @@ void ASlashCharacter::PlayAttackMontage()
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && AttackMontage)
 	{
-		AnimInstance->Montage_Play(AttackMontage, 1.5f);
+		AnimInstance->Montage_Play(AttackMontage, 1.f);
 		const int32 Seletion = FMath::RandRange(0, 2);
 		FName SectionName = FName();
 		switch (Seletion)
