@@ -19,6 +19,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	void SpawnTreasure();
 protected:
 	virtual void BeginPlay() override;
 
@@ -28,6 +29,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UCapsuleComponent* Capsule;
 
+	UFUNCTION()
+	void ChaosBreakEvent(const FChaosBreakEvent& BreakEvent);
 private:
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<class ATreasure>> TreasureClasses;
