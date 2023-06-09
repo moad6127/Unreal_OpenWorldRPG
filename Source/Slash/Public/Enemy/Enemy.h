@@ -8,7 +8,7 @@
 #include "Enemy.generated.h"
 
 class UAnimMontage;
-
+class UAttributeComponent;
 UCLASS()
 class SLASH_API AEnemy : public ACharacter, public IHitInterface
 {
@@ -31,6 +31,8 @@ protected:
 
 private:
 
+	UPROPERTY(VisibleAnywhere)
+	UAttributeComponent* Attributes;
 	/**
 	* Animation Montage
 	*/

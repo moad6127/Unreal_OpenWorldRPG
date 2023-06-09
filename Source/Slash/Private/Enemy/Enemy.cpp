@@ -7,7 +7,7 @@
 #include "Slash/DebugMacros.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "Component/AttributeComponent.h"
 AEnemy::AEnemy()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -19,12 +19,19 @@ AEnemy::AEnemy()
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
+	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
 }
 
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AEnemy::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
 }
 
 void AEnemy::PlayHitReactMontage(const FName& SectionName)
@@ -37,11 +44,7 @@ void AEnemy::PlayHitReactMontage(const FName& SectionName)
 	}
 }
 
-void AEnemy::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
