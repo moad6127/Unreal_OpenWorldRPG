@@ -42,8 +42,6 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Die()
 {
-	// Todo Play Death montage
-
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && DeathMontage)
 	{
@@ -54,12 +52,15 @@ void AEnemy::Die()
 		{
 		case 0:
 			SectionName = FName("Death_1");
+			DeathPose = EDeathPose::EDP_Death1;
 			break;
 		case 1:
 			SectionName = FName("Death_2");
+			DeathPose = EDeathPose::EDP_Death2;
 			break;
 		case 2:
 			SectionName = FName("Death_3");
+			DeathPose = EDeathPose::EDP_Death3;
 			break;
 		}
 		AnimInstance->Montage_JumpToSection(SectionName, DeathMontage);
