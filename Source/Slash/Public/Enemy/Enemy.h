@@ -33,6 +33,7 @@ protected:
 	* Play montage functions;
 	*/
 	void PlayHitReactMontage(const FName& SectionName);
+	void PlayDeathMontage();
 
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose = EDeathPose::EDP_Alive;
@@ -59,8 +60,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = VisualEffects)
 	UParticleSystem* HitParticles;
 
-	
+	UPROPERTY()
+	AActor* CombatTarget;
 
+	UPROPERTY(EditAnywhere)
+	double CombatRadius = 500.f;
 public:	
 
 };
