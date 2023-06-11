@@ -40,6 +40,32 @@ void AEnemy::BeginPlay()
 	}
 }
 
+void AEnemy::Die()
+{
+	// Todo Play Death montage
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DeathMontage)
+	{
+		AnimInstance->Montage_Play(DeathMontage);
+		const int32 Seletion = FMath::RandRange(0, 2);
+		FName SectionName = FName();
+		switch (Seletion)
+		{
+		case 0:
+			SectionName = FName("Death_1");
+			break;
+		case 1:
+			SectionName = FName("Death_2");
+			break;
+		case 2:
+			SectionName = FName("Death_3");
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName, DeathMontage);
+	}
+}
+
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -66,7 +92,14 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
-	DirectionalHitReact(ImpactPoint);
+	if (Attributes && Attributes->IsAlive())
+	{
+		DirectionalHitReact(ImpactPoint);
+	}
+	else
+	{
+		Die();
+	}
 
 	if (HitSound)
 	{
