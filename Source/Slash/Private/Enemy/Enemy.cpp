@@ -4,15 +4,16 @@
 #include "Enemy/Enemy.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Component/AttributeComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Perception/PawnSensingComponent.h"
+#include "HUD/HealthBarComponent.h"
 #include "Slash/DebugMacros.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "Component/AttributeComponent.h"
-#include "Components/WidgetComponent.h"
-#include "Components/WidgetComponent.h"
-#include "HUD/HealthBarComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AIController.h"
+
 
 AEnemy::AEnemy()
 {
@@ -34,6 +35,10 @@ AEnemy::AEnemy()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
+
+	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
+	PawnSensing->SightRadius = 4000.f;
+	PawnSensing->SetPeripheralVisionAngle(45.f);
 }
 
 void AEnemy::BeginPlay()
@@ -49,6 +54,10 @@ void AEnemy::BeginPlay()
 	EnemyController = Cast<AAIController>(GetController());
 	MoveToTarget(PatrolTarget);
 
+	if (PawnSensing)
+	{
+		PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
+	}
 }
 
 void AEnemy::Die()
@@ -106,6 +115,11 @@ AActor* AEnemy::ChoosePatrolTarget()
 		return ValidTargets[TargetSelection];
 	}
 	return nullptr;
+}
+
+void AEnemy::PawnSeen(APawn* SeenPawn)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Pawn Seen!"));
 }
 
 void AEnemy::Tick(float DeltaTime)
