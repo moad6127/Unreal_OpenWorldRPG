@@ -116,6 +116,8 @@ private:
 	FTimerHandle PatrolTimer;
 	void PatrolTimerFinish();
 
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+
 public:	
 
 };
