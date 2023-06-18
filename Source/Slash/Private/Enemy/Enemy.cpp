@@ -67,14 +67,13 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Die()
 {
+	EnemyState = EEnemyState::EES_Dead;
 	PlayDeathMontage();
-	if (HealthBarWidget)
-	{
-		HealthBarWidget->SetVisibility(false);
-	}
-
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	SetLifeSpan(3.f);
+	ClearAttackTimer();
+	HideHealthBar();
+	DisableCapsule();
+	SetLifeSpan(DeathLifeSpan);
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
 bool AEnemy::InTargetRange(AActor* Target, double Radius)
@@ -127,32 +126,6 @@ void AEnemy::Attack()
 	PlayAttackMontage();
 }
 
-void AEnemy::PlayAttackMontage()
-{
-	Super::PlayAttackMontage();
-
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && AttackMontage)
-	{
-		AnimInstance->Montage_Play(AttackMontage, 1.f);
-		const int32 Seletion = FMath::RandRange(0, 2);
-		FName SectionName = FName();
-		switch (Seletion)
-		{
-		case 0:
-			SectionName = FName("Attack1");
-			break;
-		case 1:
-			SectionName = FName("Attack2");
-			break;
-		case 2:
-			SectionName = FName("Attack3");
-			break;
-		}
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-	}
-}
-
 bool AEnemy::CanAttack()
 {
 	bool bCanAttack = IsInSideAttackRadius() &&
@@ -170,6 +143,20 @@ void AEnemy::HandleDamage(float DamageAmount)
 	{
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}
+
+}
+
+int32 AEnemy::PlayDeathMontage()
+{
+
+	const int32 Selection = Super::PlayDeathMontage();
+	TEnumAsByte<EDeathPose> Pose(Selection);
+	if (Pose < EDeathPose::EDP_MAX)
+	{
+		DeathPose = Pose;
+	}
+
+	return Selection;
 
 }
 
@@ -245,32 +232,7 @@ void AEnemy::CheckCombatTarget()
 }
 
 
-void AEnemy::PlayDeathMontage()
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && DeathMontage)
-	{
-		AnimInstance->Montage_Play(DeathMontage);
-		const int32 Seletion = FMath::RandRange(0, 2);
-		FName SectionName = FName();
-		switch (Seletion)
-		{
-		case 0:
-			SectionName = FName("Death_1");
-			DeathPose = EDeathPose::EDP_Death1;
-			break;
-		case 1:
-			SectionName = FName("Death_2");
-			DeathPose = EDeathPose::EDP_Death2;
-			break;
-		case 2:
-			SectionName = FName("Death_3");
-			DeathPose = EDeathPose::EDP_Death3;
-			break;
-		}
-		AnimInstance->Montage_JumpToSection(SectionName, DeathMontage);
-	}
-}
+
 
 void AEnemy::PatrolTimerFinish()
 {

@@ -67,7 +67,6 @@ protected:
 	/**
 	* Play montage functions;
 	*/
-	virtual void PlayAttackMontage() override;
 	void PlayEquipMontage(const FName& SectionName);
 
 	virtual void AttackEnd() override;

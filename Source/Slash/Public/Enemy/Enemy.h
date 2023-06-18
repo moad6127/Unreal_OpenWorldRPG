@@ -35,20 +35,21 @@ protected:
 	AActor* ChoosePatrolTarget();
 
 	virtual void Attack() override;
-	virtual void PlayAttackMontage() override;
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
+	virtual int32 PlayDeathMontage() override;
 
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn);
 
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float DeathLifeSpan = 5.f;
 	/**
 	* Play montage functions;
 	*/
-	void PlayDeathMontage();
 
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose;
+	TEnumAsByte<EDeathPose> DeathPose;
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
