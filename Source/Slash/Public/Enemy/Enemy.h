@@ -38,6 +38,7 @@ protected:
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount) override;
 	virtual int32 PlayDeathMontage() override;
+	virtual	void AttackEnd() override;
 
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn);
