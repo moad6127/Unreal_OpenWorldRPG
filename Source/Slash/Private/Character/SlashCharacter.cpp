@@ -13,6 +13,7 @@
 #include "Items/Weapons/Weapon.h"
 #include "Animation/AnimMontage.h"
 #include "Components/BoxComponent.h"
+#include "Slash/DebugMacros.h"
 
 ASlashCharacter::ASlashCharacter()
 {
@@ -62,6 +63,16 @@ void ASlashCharacter::BeginPlay()
 void ASlashCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (ActionState == EActionState::EAS_Attacking)
+	{
+		if (EquippedWeapon)
+		{
+			FVector Start = EquippedWeapon->GetBoxTraceStart()->GetComponentLocation();
+			FVector End = EquippedWeapon->GetBoxTraceEnd()->GetComponentLocation();
+			DRAW_LINE(Start, End);
+		}
+	}
 }
 
 void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

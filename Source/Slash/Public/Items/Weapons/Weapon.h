@@ -73,4 +73,6 @@ private:
 public:
 	FORCEINLINE UBoxComponent* GetWeaponBox() const { return WeaponBox; }
 	FORCEINLINE TArray<AActor*>* GetIgnoreActors() { return &IgnoreActors; }
+	FORCEINLINE USceneComponent* GetBoxTraceStart() const { return BoxTraceStart; }
+	FORCEINLINE USceneComponent* GetBoxTraceEnd() const { return BoxTraceEnd; }
 };
