@@ -24,18 +24,10 @@ class SLASH_API ASlashCharacter : public ABaseCharacter
 
 public:
 	ASlashCharacter();
-	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
 
 protected:
 	virtual void BeginPlay() override;
-
-	/**
-	* Input
-	*/
-
 
 	/**
 	* Enhanced Input
@@ -63,33 +55,31 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void FKeyPressed();
 	virtual void Attack() override;
+	/** Enhanced Input */
 
 	/**
-	* Play montage functions;
+	* Combat
 	*/
-	void PlayEquipMontage(const FName& SectionName);
-
-	virtual void AttackEnd() override;
-
+	void EquipWeapon(AWeapon* Weapon);
 	virtual bool CanAttack() override;
-
+	virtual void AttackEnd() override;
 	bool CanDisarm();
 	bool CanArm();
-
-	UFUNCTION(BlueprintCallable)
-	void Disarm();
-
-	UFUNCTION(BlueprintCallable)
+	void DisArm();
 	void Arm();
+	void PlayEquipMontage(const FName& SectionName);
+
+
+	UFUNCTION(BlueprintCallable)
+	void AttachWeaponToBack();
+
+	UFUNCTION(BlueprintCallable)
+	void AttachWeaponToHand();
 
 	UFUNCTION(BlueprintCallable)
 	void FinishEquipping();
 private:
-
-	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
-
-	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	EActionState ActionState = EActionState::EAS_Unoccupied;
+	/** Character Component*/
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
@@ -106,13 +96,15 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
-
-
-
 	UPROPERTY(EditDefaultsOnly, Category = Montage)
 	UAnimMontage* EquipMontage;
 
-	
+	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EActionState ActionState = EActionState::EAS_Unoccupied;
+
+
 
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
