@@ -28,7 +28,6 @@ public:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 protected:
 	virtual void BeginPlay() override;
-
 	/**
 	* Enhanced Input
 	*/
