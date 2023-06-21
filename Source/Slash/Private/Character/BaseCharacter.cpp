@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Components/CapsuleComponent.h"
+#include "Slash/DebugMacros.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -63,6 +64,31 @@ void ABaseCharacter::StopAttackMontage()
 	{
 		AnimInstance->Montage_Stop(0.25, AttackMontage);
 	}
+}
+
+FVector ABaseCharacter::GetTranslationWarpTarget()
+{
+	if (CombatTarget == nullptr)
+	{
+		return FVector();
+	}
+
+	const FVector CombatTargetLoction = CombatTarget->GetActorLocation();
+	const FVector Location = GetActorLocation();
+	 
+	FVector TargetToMe = (Location - CombatTargetLoction).GetSafeNormal();
+	TargetToMe *= WarpTargetDistance;
+
+	return CombatTargetLoction + TargetToMe;
+}
+
+FVector ABaseCharacter::GetRotationWarpTarget()
+{
+	if (CombatTarget)
+	{
+		return CombatTarget->GetActorLocation();
+	}
+	return FVector();
 }
 
 void ABaseCharacter::DisableCapsule()
