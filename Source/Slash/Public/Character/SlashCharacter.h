@@ -15,7 +15,7 @@ class UInputAction;
 class UGroomComponent;
 class AItem;
 class UAnimMontage;
-
+class USphereComponent;
 
 UCLASS()
 class SLASH_API ASlashCharacter : public ABaseCharacter
@@ -24,6 +24,7 @@ class SLASH_API ASlashCharacter : public ABaseCharacter
 
 public:
 	ASlashCharacter();
+	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 protected:
@@ -50,8 +51,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* AttackAction;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* LockOnAction;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void LockOn();
 	void FKeyPressed();
 	virtual void Attack() override;
 	/** Enhanced Input */
@@ -106,8 +111,30 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
+	/**
+	* LockOnFunc
+	*/
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* LockOnSphere;
 
+	TArray<AActor*> EnemyInRange;
 
+	UFUNCTION()
+		virtual void OnSphereOverlap(
+			UPrimitiveComponent* OverlappedComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult& SweepResult);
+
+	UFUNCTION()
+		virtual void OnSphereEndOverlap(
+			UPrimitiveComponent* OverlappedComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex);
+	/** LockOn **/
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }

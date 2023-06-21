@@ -12,10 +12,12 @@
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
 #include "Animation/AnimMontage.h"
+#include "Components/SphereComponent.h"
+#include "Slash/DebugMacros.h"
 
 ASlashCharacter::ASlashCharacter()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -30,7 +32,9 @@ ASlashCharacter::ASlashCharacter()
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true);
 
-
+	LockOnSphere = CreateDefaultSubobject<USphereComponent>(TEXT("LockOnSphere"));
+	LockOnSphere->SetupAttachment(GetRootComponent());
+	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(GetRootComponent());
 	SpringArm->TargetArmLength = 300.f;
@@ -48,6 +52,15 @@ ASlashCharacter::ASlashCharacter()
 
 }
 
+void ASlashCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (CombatTarget)
+	{
+		DRAW_SPHERE_SingleFrame(CombatTarget->GetActorLocation());
+	}
+}
+
 
 void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -60,6 +73,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(FKeyAction, ETriggerEvent::Triggered, this, &ASlashCharacter::FKeyPressed);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
+		EnhancedInputComponent->BindAction(LockOnAction, ETriggerEvent::Triggered, this, &ASlashCharacter::LockOn);
 	}
 
 }
@@ -76,6 +90,8 @@ void ASlashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	LockOnSphere->OnComponentBeginOverlap.AddDynamic(this, &ASlashCharacter::OnSphereOverlap);
+	LockOnSphere->OnComponentEndOverlap.AddDynamic(this,&ASlashCharacter::OnSphereEndOverlap);
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
@@ -112,6 +128,24 @@ void ASlashCharacter::Look(const FInputActionValue& Value)
 
 	AddControllerPitchInput(LookAxisVector.Y);
 	AddControllerYawInput(LookAxisVector.X);
+}
+
+void ASlashCharacter::LockOn()
+{
+	const FVector Location = GetActorLocation();
+	FVector ClosestEnmeyLocationDistance(1000.f);
+	AActor* ClosestEnemy{};
+	for (auto Enemy : EnemyInRange)
+	{
+		FVector DistanceToEnemy = Location - Enemy->GetActorLocation();
+		if (DistanceToEnemy.Length() < ClosestEnmeyLocationDistance.Length())
+		{
+			ClosestEnemy = Enemy;
+			ClosestEnmeyLocationDistance = DistanceToEnemy;
+		}
+	}
+	CombatTarget = ClosestEnemy;
+	UE_LOG(LogTemp, Warning, TEXT("LockOn"));
 }
 
 void ASlashCharacter::FKeyPressed()
@@ -227,6 +261,28 @@ void ASlashCharacter::FinishEquipping()
 void ASlashCharacter::HitReactEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
+}
+
+void ASlashCharacter::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->ActorHasTag(FName("Enemy")))
+	{
+		EnemyInRange.AddUnique(OtherActor);
+		UE_LOG(LogTemp, Warning, TEXT("AddActor"));
+	}
+}
+
+void ASlashCharacter::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor->ActorHasTag(FName("Enemy")))
+	{
+		EnemyInRange.Remove(OtherActor);
+		UE_LOG(LogTemp, Warning, TEXT("RemoveActor"));
+	}
+	if (CombatTarget == OtherActor)
+	{
+		CombatTarget = nullptr;
+	}
 }
 
 
