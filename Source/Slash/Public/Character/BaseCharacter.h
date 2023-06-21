@@ -33,9 +33,12 @@ protected:
 	void DisableCapsule();
 	virtual bool CanAttack();
 	bool IsAlive();
+
+
 	void PlayHitReactMontage(const FName& SectionName);
 	virtual	int32 PlayAttackMontage();
 	virtual int32 PlayDeathMontage();
+	void StopAttackMontage();
 
 	UFUNCTION(BlueprintCallable)
 	virtual	void AttackEnd();
