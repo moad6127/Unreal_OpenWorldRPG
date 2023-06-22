@@ -57,7 +57,7 @@ void ASlashCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (CombatTarget)
 	{
-		DRAW_SPHERE_SingleFrame(CombatTarget->GetActorLocation());
+		DRAW_SPHERE_SingleFrame(CombatTarget->GetActorLocation());	
 	}
 }
 
@@ -76,6 +76,12 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(LockOnAction, ETriggerEvent::Triggered, this, &ASlashCharacter::LockOn);
 	}
 
+}
+
+float ASlashCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	HandleDamage(DamageAmount);
+	return DamageAmount;
 }
 
 void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
@@ -117,7 +123,7 @@ void ASlashCharacter::Move(const FInputActionValue& Value)
 
 	const FVector DirectionForward = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 	AddMovementInput(DirectionForward, MovementVector.Y);
-
+	
 	const FVector DirectionRight = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	AddMovementInput(DirectionRight, MovementVector.X);
 }
@@ -145,7 +151,6 @@ void ASlashCharacter::LockOn()
 		}
 	}
 	CombatTarget = ClosestEnemy;
-	UE_LOG(LogTemp, Warning, TEXT("LockOn"));
 }
 
 void ASlashCharacter::FKeyPressed()
@@ -268,8 +273,8 @@ void ASlashCharacter::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	if (OtherActor->ActorHasTag(FName("Enemy")))
 	{
 		EnemyInRange.AddUnique(OtherActor);
-		UE_LOG(LogTemp, Warning, TEXT("AddActor"));
 	}
+
 }
 
 void ASlashCharacter::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -277,7 +282,6 @@ void ASlashCharacter::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponen
 	if (OtherActor->ActorHasTag(FName("Enemy")))
 	{
 		EnemyInRange.Remove(OtherActor);
-		UE_LOG(LogTemp, Warning, TEXT("RemoveActor"));
 	}
 	if (CombatTarget == OtherActor)
 	{

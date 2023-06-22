@@ -20,11 +20,6 @@ void UAttributeComponent::BeginPlay()
 void UAttributeComponent::ReceiveDamage(float Damage)
 {
 	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
-
-	if (Health == 0.f)
-	{
-		//TOOD Death
-	}
 }
 
 float UAttributeComponent::GetHealthPercent() const
