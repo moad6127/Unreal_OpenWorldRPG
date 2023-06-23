@@ -6,9 +6,9 @@
 #include "Items/Weapons/Weapon.h"
 #include "Component/AttributeComponent.h"
 #include "Kismet/GameplayStatics.h"
-
 #include "Components/CapsuleComponent.h"
 #include "Slash/DebugMacros.h"
+
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -45,6 +45,7 @@ void ABaseCharacter::Attack()
 
 void ABaseCharacter::Die()
 {
+	PlayDeathMontage();
 }
 
 int32 ABaseCharacter::PlayAttackMontage()
@@ -54,7 +55,15 @@ int32 ABaseCharacter::PlayAttackMontage()
 
 int32 ABaseCharacter::PlayDeathMontage()
 {
-	return PlayRandomMontageSection(DeathMontage, DeathMontageSections);
+
+	const int32 Selection = PlayRandomMontageSection(DeathMontage, DeathMontageSections);
+	TEnumAsByte<EDeathPose> Pose(Selection);
+	if (Pose < EDeathPose::EDP_MAX)
+	{
+		DeathPose = Pose;
+	}
+
+	return Selection;
 }
 
 void ABaseCharacter::StopAttackMontage()
@@ -200,6 +209,11 @@ bool ABaseCharacter::CanAttack()
 bool ABaseCharacter::IsAlive()
 {
 	return Attributes && Attributes->IsAlive();
+}
+
+void ABaseCharacter::DisableMeshCollision()
+{
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABaseCharacter::AttackEnd()
