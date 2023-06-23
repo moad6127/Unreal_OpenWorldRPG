@@ -48,9 +48,10 @@ void ABreakableActor::ChaosBreakEvent(const FChaosBreakEvent& BreakEvent)
 	}
 	bBroken = true;
 
+	SpawnTreasure();
 	Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	SetLifeSpan(3.0f);
-	SpawnTreasure();
+
 
 }
 

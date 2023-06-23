@@ -9,11 +9,15 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GroomComponent.h"
+#include "Component/AttributeComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
 #include "Animation/AnimMontage.h"
 #include "Components/SphereComponent.h"
 #include "Slash/DebugMacros.h"
+#include "HUD/SlashHUD.h"
+#include "HUD/SlashOverlay.h"
+
 
 ASlashCharacter::ASlashCharacter()
 {
@@ -34,6 +38,8 @@ ASlashCharacter::ASlashCharacter()
 
 	LockOnSphere = CreateDefaultSubobject<USphereComponent>(TEXT("LockOnSphere"));
 	LockOnSphere->SetupAttachment(GetRootComponent());
+	LockOnSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	LockOnSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(GetRootComponent());
@@ -95,9 +101,9 @@ void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* 
 void ASlashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	LockOnSphere->OnComponentBeginOverlap.AddDynamic(this, &ASlashCharacter::OnSphereOverlap);
-	LockOnSphere->OnComponentEndOverlap.AddDynamic(this,&ASlashCharacter::OnSphereEndOverlap);
+	LockOnSphere->OnComponentEndOverlap.AddDynamic(this, &ASlashCharacter::OnSphereEndOverlap);
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
@@ -107,6 +113,7 @@ void ASlashCharacter::BeginPlay()
 		}
 	}
 	Tags.Add(FName("EngageableTarget"));
+	InitializeSlashOverlay();
 }
 
 
@@ -266,6 +273,26 @@ void ASlashCharacter::FinishEquipping()
 void ASlashCharacter::HitReactEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
+}
+
+void ASlashCharacter::InitializeSlashOverlay()
+{
+	APlayerController* PlayerContrller = Cast<APlayerController>(GetController());
+	if (PlayerContrller)
+	{
+		ASlashHUD* SlashHUD = Cast<ASlashHUD>(PlayerContrller->GetHUD());
+		if (SlashHUD)
+		{
+			SlashOverlay = SlashHUD->GetSlashOverlay();
+			if (SlashOverlay && Attributes)
+			{
+				SlashOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+				SlashOverlay->SetStaminaBarPercent(1.f);
+				SlashOverlay->SetGold(0);
+				SlashOverlay->SetSoul(0);
+			}
+		}
+	}
 }
 
 void ASlashCharacter::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

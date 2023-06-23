@@ -64,7 +64,7 @@ protected:
 	AActor* CombatTarget;
 
 	UPROPERTY(EditAnywhere, Category = Combat)
-	double WarpTargetDistance = 150.f;
+	double WarpTargetDistance = 100.f;
 
 private:
 

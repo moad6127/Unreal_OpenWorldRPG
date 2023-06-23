@@ -16,7 +16,7 @@ class UGroomComponent;
 class AItem;
 class UAnimMontage;
 class USphereComponent;
-
+class USlashOverlay;
 UCLASS()
 class SLASH_API ASlashCharacter : public ABaseCharacter
 {
@@ -87,6 +87,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void HitReactEnd();
 private:
+
+	void InitializeSlashOverlay();
+
 	/** Character Component*/
 
 	UPROPERTY(VisibleAnywhere)
@@ -111,6 +114,9 @@ private:
 
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
+
+	UPROPERTY()
+	USlashOverlay* SlashOverlay;
 
 	/**
 	* LockOnFunc

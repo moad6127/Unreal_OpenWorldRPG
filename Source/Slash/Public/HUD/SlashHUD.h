@@ -21,4 +21,7 @@ private:
 	TSubclassOf<USlashOverlay> SlashOverlayClass;
 
 	USlashOverlay* SlashOverlay;
+
+public:
+	FORCEINLINE USlashOverlay* GetSlashOverlay() const { return SlashOverlay; }
 };
