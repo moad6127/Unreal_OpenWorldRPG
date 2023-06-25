@@ -22,7 +22,7 @@ public:
 	void Equip(USceneComponent* InParent, FName InSocketName,AActor* NewOwner, APawn* NewInstigator);
 	void DeactivateEmbers();
 	void DisableSphereCollision();
-	void PalyEquipSound();
+	void PlayEquipSound();
 	void AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
 	
 protected:
