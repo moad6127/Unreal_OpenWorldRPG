@@ -51,16 +51,16 @@ void ABreakableActor::ChaosBreakEvent(const FChaosBreakEvent& BreakEvent)
 	SpawnTreasure();
 	Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	SetLifeSpan(3.0f);
-
-
 }
 
 void ABreakableActor::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
+
 }
 
 void ABreakableActor::SpawnTreasure()
 {
+
 	UWorld* World = GetWorld();
 	if (World && TreasureClasses.Num() > 0)
 	{
@@ -69,6 +69,8 @@ void ABreakableActor::SpawnTreasure()
 
 		const int32 Selection = FMath::RandRange(0, TreasureClasses.Num() - 1);
 		World->SpawnActor<ATreasure>(TreasureClasses[Selection], Location, GetActorRotation());
+
 	}
+
 }
 
