@@ -70,6 +70,7 @@ protected:
 	void LockOn();
 	void FKeyPressed();
 	virtual void Attack() override;
+	void LockOnRotation();
 	void Dodge();
 
 	/** Enhanced Input */
@@ -104,7 +105,6 @@ private:
 	bool IsUnoccupied();
 	void InitializeSlashOverlay();
 	void SetHUDHealth();
-
 	/** Character Component*/
 
 	UPROPERTY(VisibleAnywhere)
@@ -140,6 +140,9 @@ private:
 	USphereComponent* LockOnSphere;
 
 	TArray<AActor*> EnemyInRange;
+
+	UPROPERTY(EditAnywhere)
+	float RotationSpeed = 50.f;
 
 	UFUNCTION()
 		virtual void OnSphereOverlap(

@@ -73,7 +73,7 @@ void ASlashCharacter::Tick(float DeltaTime)
 	if (CombatTarget)
 	{
 		DRAW_SPHERE_SingleFrame(CombatTarget->GetActorLocation());	
-
+		
 	}
 }
 
@@ -236,10 +236,22 @@ void ASlashCharacter::Attack()
 	Super::Attack();
 	if (CanAttack())
 	{
+		LockOnRotation();	
 		PlayAttackMontage();
 		ActionState = EActionState::EAS_Attacking;
 	}
 
+}
+
+void ASlashCharacter::LockOnRotation()
+{
+	if (CombatTarget)
+	{
+		const FVector Direction = CombatTarget->GetActorLocation() - GetActorLocation();
+		const FRotator TargetRotatoin = Direction.Rotation();
+		FRotator LockOnRotator = FMath::RInterpTo(GetActorRotation(), TargetRotatoin, GetWorld()->GetDeltaSeconds(), RotationSpeed);
+		SetActorRotation(LockOnRotator);
+	}
 }
 
 void ASlashCharacter::Dodge()
@@ -395,6 +407,7 @@ void ASlashCharacter::SetHUDHealth()
 		SlashOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
 	}
 }
+
 
 void ASlashCharacter::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
