@@ -62,11 +62,15 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* LockOnAction;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* DodgeAction;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void LockOn();
 	void FKeyPressed();
 	virtual void Attack() override;
+	void Dodge();
 	/** Enhanced Input */
 
 	/**
@@ -75,6 +79,7 @@ protected:
 	void EquipWeapon(AWeapon* Weapon);
 	virtual bool CanAttack() override;
 	virtual void AttackEnd() override;
+	virtual void DodgeEnd() override;
 	bool CanDisarm();
 	bool CanArm();
 	void DisArm();
