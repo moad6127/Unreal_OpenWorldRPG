@@ -63,6 +63,13 @@ ASlashCharacter::ASlashCharacter()
 void ASlashCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (Attributes && SlashOverlay)
+	{
+		Attributes->RegenStamina(DeltaTime);
+		SlashOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+
+	}
 	if (CombatTarget)
 	{
 		DRAW_SPHERE_SingleFrame(CombatTarget->GetActorLocation());	
@@ -237,14 +244,21 @@ void ASlashCharacter::Attack()
 
 void ASlashCharacter::Dodge()
 {
-	if (ActionState != EActionState::EAS_Unoccupied)
+	if (!IsUnoccupied() || !HasEnoughStamina())
 	{
 		return;
 	}
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
 	PlayDodgeMontage();
 	ActionState = EActionState::EAS_Dodge;
+	if (Attributes && SlashOverlay)
+	{
+		Attributes->UseStamina(Attributes->GetDodgeCost());
+		SlashOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+	}
 }
+
+
 
 void ASlashCharacter::EquipWeapon(AWeapon* Weapon)
 {
@@ -316,6 +330,11 @@ void ASlashCharacter::Die()
 	Super::Die();
 	ActionState = EActionState::EAS_Dead;
 	DisableMeshCollision();
+}
+
+bool ASlashCharacter::HasEnoughStamina()
+{
+	return Attributes && Attributes->GetStamina() > Attributes->GetDodgeCost();
 }
 
 void ASlashCharacter::AttachWeaponToBack()

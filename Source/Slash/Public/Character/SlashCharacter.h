@@ -71,6 +71,7 @@ protected:
 	void FKeyPressed();
 	virtual void Attack() override;
 	void Dodge();
+
 	/** Enhanced Input */
 
 	/**
@@ -86,6 +87,7 @@ protected:
 	void Arm();
 	void PlayEquipMontage(const FName& SectionName);
 	virtual void Die() override;
+	bool HasEnoughStamina();
 
 	UFUNCTION(BlueprintCallable)
 	void AttachWeaponToBack();
