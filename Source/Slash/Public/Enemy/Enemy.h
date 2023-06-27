@@ -98,6 +98,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	double AttackRadius = 150.f;
 
+	UPROPERTY(EditAnywhere)
+	double AcceptanceRadius = 60.f;
+
 	UPROPERTY()
 	class AAIController* EnemyController;
 
