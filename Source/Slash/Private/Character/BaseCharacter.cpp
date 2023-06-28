@@ -26,6 +26,10 @@ void ABaseCharacter::BeginPlay()
 
 void ABaseCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
+	if (this->ActorHasTag(FName("Dead")))
+	{
+		return;
+	}
 	if (IsAlive() && Hitter)
 	{
 		DirectionalHitReact(Hitter->GetActorLocation());
