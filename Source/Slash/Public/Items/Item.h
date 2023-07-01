@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
@@ -15,6 +16,7 @@ enum class EItemState : uint8
 	EIS_Hovering,
 	EIS_Equipped
 };
+
 
 UCLASS()
 class SLASH_API AItem : public AActor

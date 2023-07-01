@@ -14,4 +14,7 @@ class SLASH_API APotionItem : public AItem
 {
 	GENERATED_BODY()
 	
+protected:
+
+	float Amount;
 };
