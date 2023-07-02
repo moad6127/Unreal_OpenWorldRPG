@@ -16,5 +16,20 @@ class SLASH_API APotionItem : public AItem
 	
 protected:
 
-	float Amount;
+	UPROPERTY(EditAnywhere, Category = Potion)
+	float HealAmount;
+
+
+	virtual void OnSphereOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult) override;
+
+public:
+
+	FORCEINLINE float GetHealAmount() const { return HealAmount; }
+
 };

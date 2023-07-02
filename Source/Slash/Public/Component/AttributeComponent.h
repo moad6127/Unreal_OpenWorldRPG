@@ -50,6 +50,8 @@ private:
 
 public:
 	void ReceiveDamage(float Damage);
+	void Healing(float HealAmount);
+	void StamianHealing(float StaminaHealAmount);
 	void UseStamina(float StaminaCost);
 	float GetHealthPercent() const;
 	float GetStaminaPercent() const;
