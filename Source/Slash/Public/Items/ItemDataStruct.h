@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Coreminimal.h"
+#include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "ItemDataStruct.generated.h"
-
 
 
 UENUM()
@@ -105,6 +104,8 @@ struct FItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, Category = "Item Data")
 	FItemNumericData NumericData;
 
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FItemAssetData AssetData;
 };
 
 

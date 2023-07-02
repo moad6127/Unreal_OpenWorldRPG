@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataTable.h"
 #include "GameFramework/Actor.h"
+#include "ItemDataStruct.h"
 #include "Item.generated.h"
 
 class USphereComponent;
@@ -26,6 +26,48 @@ class SLASH_API AItem : public AActor
 public:	
 	AItem();
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(Category = Item)
+	AItem* CreateItemCopy();
+
+	UFUNCTION(Category = Item)
+	void SetQuantity(const int32 NewQuantity);
+
+	UFUNCTION(Category = Item)
+	virtual void Use(class ABaseCharacter* Character);
+
+	/**
+	* Item Data
+	*/
+	//UPROPERTY()
+	//UInventoryComponent* OwningInventory;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Item Data", meta = (UIMin = 1 , UIMax = 100))
+	int32 Quantity;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FName ID;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	EItemType ItemType;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	EItemQuality ItemQuality;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FItemStatistics ItemStatistics;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FItemTextData TextData;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FItemNumericData NumericData;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FItemAssetData AssetData;
+	/**
+	* Item Data
+	*/
 protected:
 	virtual void BeginPlay() override;
 
@@ -63,6 +105,11 @@ protected:
 	virtual void SpawnPickupSystem();
 	virtual void SpawnPickupSound();
 
+	bool operator==(const FName& OtherID) const
+	{
+		return ID == OtherID;
+	}
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* ItemMesh;
 
@@ -86,6 +133,17 @@ private:
 	UPROPERTY(EditAnywhere)
 	UNiagaraSystem* PickupEffect;
 
+public:
+
+	UFUNCTION(Category = Item)
+	FORCEINLINE float GetItemStackWeight() const { return Quantity * NumericData.Weight; }
+
+	UFUNCTION(Category = Item)
+	FORCEINLINE float GetItemSingleWeight() const { return NumericData.Weight; }
+
+	UFUNCTION(Category = Item)
+	FORCEINLINE bool IsFullItemStack() const { return Quantity == NumericData.MaxStackSize; }
+	
 
 };
 

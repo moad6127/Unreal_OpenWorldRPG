@@ -28,6 +28,48 @@ AItem::AItem()
 
 }
 
+void AItem::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	RunningTime += DeltaTime;
+
+	if (ItemState == EItemState::EIS_Hovering)
+	{
+		AddActorWorldOffset(FVector(0.f, 0.f, TransformedSin()));
+	}
+
+}
+
+AItem* AItem::CreateItemCopy()
+{
+	AItem* ItemCopy = NewObject<AItem>(StaticClass());
+	ItemCopy->ID = this->ID;
+	ItemCopy->Quantity = this->Quantity;
+	ItemCopy->ItemType = this->ItemType;
+	ItemCopy->TextData = this->TextData;
+	ItemCopy->NumericData = this->NumericData;
+	ItemCopy->ItemStatistics = this->ItemStatistics;
+	ItemCopy->AssetData = this->AssetData;
+
+	return ItemCopy;
+}
+
+void AItem::SetQuantity(const int32 NewQuantity)
+{
+	if (NewQuantity != Quantity)
+	{
+		Quantity = FMath::Clamp(NewQuantity, 0, NumericData.bIsStackable ? NumericData.MaxStackSize : 1);
+
+		// TODO 
+		// Inventory check
+	}
+}
+
+void AItem::Use(ABaseCharacter* Character)
+{
+}
+
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
@@ -88,16 +130,5 @@ void AItem::SpawnPickupSound()
 	}
 }
 
-void AItem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-	RunningTime += DeltaTime;
-
-	if (ItemState == EItemState::EIS_Hovering)
-	{
-		AddActorWorldOffset(FVector(0.f, 0.f, TransformedSin()));
-	}
-
-}
 
