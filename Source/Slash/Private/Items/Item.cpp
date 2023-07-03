@@ -18,6 +18,7 @@ AItem::AItem()
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMeshComponent"));
 	ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
 	RootComponent = ItemMesh;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
@@ -77,6 +78,37 @@ void AItem::BeginPlay()
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
 	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
 
+}
+
+void AItem::BeginFocus()
+{
+	if (ItemMesh)
+	{
+		ItemMesh->SetRenderCustomDepth(true);
+	}
+}
+
+void AItem::EndFocus()
+{
+	if (ItemMesh)
+	{
+		ItemMesh->SetRenderCustomDepth(false);
+	}
+}
+
+void AItem::BeginInteract()
+{
+	UE_LOG(LogTemp,Warning, TEXT("BeginInteraction!"))
+}
+
+void AItem::EndInteract()
+{
+	UE_LOG(LogTemp, Warning, TEXT("EndInteraction!"))
+}
+
+void AItem::Interact()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Interaction!"))
 }
 
 float AItem::TransformedSin()

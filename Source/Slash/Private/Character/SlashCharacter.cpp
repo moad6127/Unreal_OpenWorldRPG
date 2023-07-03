@@ -94,6 +94,8 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Attack);
 		EnhancedInputComponent->BindAction(LockOnAction, ETriggerEvent::Triggered, this, &ASlashCharacter::LockOn);
 		EnhancedInputComponent->BindAction(DodgeAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Dodge);
+		EnhancedInputComponent->BindAction(InteractionAction, ETriggerEvent::Started, this, &ASlashCharacter::BeginInteract);
+		EnhancedInputComponent->BindAction(InteractionAction, ETriggerEvent::Completed, this, &ASlashCharacter::EndInteract);
 	}
 
 }
@@ -181,57 +183,115 @@ void ASlashCharacter::BeginPlay()
 
 void ASlashCharacter::PerformInteractionCheck()
 {
+	//LineTrace가 잘안되서 그냥 overlappingItem을 사용하기
+
 	InteractionData.lastInteractionCheckTime = GetWorld()->GetTimeSeconds();
-
-	FVector TraceStart{ GetPawnViewLocation()};
-	FVector TraceEnd{ TraceStart + (GetViewRotation().Vector() * InteractionCheckDistance) };
-
-	DRAW_VECTOR(TraceStart, TraceEnd);
-
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);
-	FHitResult TraceHit;
-
-	if (GetWorld()->LineTraceSingleByChannel(TraceHit, TraceStart, TraceEnd, ECC_Visibility, Params))
+	if (OverlappingItem)
 	{
-		if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
+		if (OverlappingItem->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
 		{
-			const float Distance = (TraceStart - TraceHit.ImpactPoint).Size();
-
-			if (TraceHit.GetActor() != InteractionData.CurrentInteractable && Distance <= InteractionCheckDistance)
+			if (OverlappingItem != InteractionData.CurrentInteractable)
 			{
-				FoundInteractable(TraceHit.GetActor());
+				FoundInteractable(OverlappingItem);
 				return;
 			}
 
-			if (TraceHit.GetActor() == InteractionData.CurrentInteractable)
+			if (OverlappingItem == InteractionData.CurrentInteractable)
 			{
 				return;
 			}
 		}
 	}
 
+
+
 	NoInteractableFound();
 }
 
 void ASlashCharacter::FoundInteractable(AActor* NewInteractable)
 {
+	if (IsInteracting())
+	{
+		EndInteract();
+	}
+
+	if (InteractionData.CurrentInteractable)
+	{
+		TargetInteractable = InteractionData.CurrentInteractable;
+		TargetInteractable->EndFocus();
+	}
+
+	InteractionData.CurrentInteractable = NewInteractable;
+	TargetInteractable = NewInteractable;
+
+	TargetInteractable->BeginFocus();
 }
 
 void ASlashCharacter::NoInteractableFound()
 {
+	if (IsInteracting())
+	{
+		GetWorldTimerManager().ClearTimer(TimerHandleInteraction);
+	}
+
+	if (InteractionData.CurrentInteractable)
+	{
+		if (IsValid(TargetInteractable.GetObject()))
+		{
+			TargetInteractable->EndFocus();
+		}
+
+		//TODO hide interfactionwidget
+
+		InteractionData.CurrentInteractable = nullptr;
+		TargetInteractable = nullptr;
+	}
 }
 
 void ASlashCharacter::BeginInteract()
 {
+	PerformInteractionCheck();
+	if (InteractionData.CurrentInteractable)
+	{
+		if (IsValid(TargetInteractable.GetObject()))
+		{
+			TargetInteractable->BeginInteract();
+			if (FMath::IsNearlyZero(TargetInteractable->InteractablData.InteractionDuration, 0.1))
+			{
+				Interact();
+			}
+			else
+			{
+				GetWorldTimerManager().SetTimer(
+					TimerHandleInteraction,
+					this,
+					&ASlashCharacter::Interact,
+					TargetInteractable->InteractablData.InteractionDuration,
+					false
+				);
+			}
+		}
+	}
 }
 
 void ASlashCharacter::EndInteract()
 {
+	GetWorldTimerManager().ClearTimer(TimerHandleInteraction);
+
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		TargetInteractable->EndInteract();
+	}
 }
 
 void ASlashCharacter::Interact()
 {
+	GetWorldTimerManager().ClearTimer(TimerHandleInteraction);
+
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		TargetInteractable->Interact();
+	}
 }
 
 

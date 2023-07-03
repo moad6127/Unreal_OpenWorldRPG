@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ItemDataStruct.h"
+#include "Interfaces/InteractionInterface.h"
 #include "Item.generated.h"
 
 class USphereComponent;
@@ -19,7 +20,7 @@ enum class EItemState : uint8
 
 
 UCLASS()
-class SLASH_API AItem : public AActor
+class SLASH_API AItem : public AActor , public IInteractionInterface
 {
 	GENERATED_BODY()
 	
@@ -70,6 +71,17 @@ public:
 	*/
 protected:
 	virtual void BeginPlay() override;
+
+	/**
+	* InteractionInterface
+	*/
+
+	virtual void BeginFocus() override;
+	virtual void EndFocus() override;
+	virtual void BeginInteract() override;
+	virtual void EndInteract() override;
+	virtual void Interact() override;
+	/*** InteractionInterface*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sine Parameters")
 	float Amplitude = 0.25f;
@@ -144,7 +156,7 @@ public:
 	UFUNCTION(Category = Item)
 	FORCEINLINE bool IsFullItemStack() const { return Quantity == NumericData.MaxStackSize; }
 	
-
+	
 };
 
 template<typename T>
