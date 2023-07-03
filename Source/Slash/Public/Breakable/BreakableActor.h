@@ -31,6 +31,7 @@ protected:
 
 	UFUNCTION()
 	void ChaosBreakEvent(const FChaosBreakEvent& BreakEvent);
+
 private:
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<class ATreasure>> TreasureClasses;

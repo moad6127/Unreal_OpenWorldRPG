@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "CharacterType.h"
 #include "Interfaces/PickupInterface.h"
+#include "Interfaces/InteractionInterface.h"
 #include "SlashCharacter.generated.h"
 
 class USpringArmComponent;
@@ -22,8 +23,26 @@ class ASoul;
 class ATreasure;
 class APotionItem;
 
+USTRUCT()
+struct FInteractionData
+{
+	GENERATED_USTRUCT_BODY()
+
+	FInteractionData() : CurrentInteractable(nullptr), lastInteractionCheckTime(0.f)
+	{
+
+	};
+
+	UPROPERTY()
+	AActor* CurrentInteractable;
+
+	UPROPERTY()
+	float lastInteractionCheckTime;
+};
+
+
 UCLASS()
-class SLASH_API ASlashCharacter : public ABaseCharacter , public IPickupInterface
+class SLASH_API ASlashCharacter : public ABaseCharacter , public IPickupInterface 
 {
 	GENERATED_BODY()
 
@@ -41,6 +60,28 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	/**
+	* Interact
+	*/
+
+	UPROPERTY(VisibleAnywhere, Category = "Interaction")
+	TScriptInterface<IInteractionInterface> TargetInteractable;
+
+	float InteractionCheckFrequncy = 0.1f;
+
+	float InteractionCheckDistance = 225.f;
+
+	FTimerHandle TimerHandleInteraction;
+
+	FInteractionData InteractionData;
+
+	void PerformInteractionCheck();
+	void FoundInteractable(AActor* NewInteractable);
+	void NoInteractableFound();
+	void BeginInteract();
+	void EndInteract();
+	void Interact();
 	/**
 	* Enhanced Input
 	*/
@@ -93,6 +134,8 @@ protected:
 	void PlayEquipMontage(const FName& SectionName);
 	virtual void Die_Implementation() override;
 	bool HasEnoughStamina();
+
+
 
 	UFUNCTION(BlueprintCallable)
 	void AttachWeaponToBack();

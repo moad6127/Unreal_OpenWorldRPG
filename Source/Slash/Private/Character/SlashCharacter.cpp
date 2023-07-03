@@ -21,7 +21,6 @@
 #include "HUD/SlashHUD.h"
 #include "HUD/SlashOverlay.h"
 
-
 ASlashCharacter::ASlashCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -74,7 +73,10 @@ void ASlashCharacter::Tick(float DeltaTime)
 	if (CombatTarget)
 	{
 		DRAW_SPHERE_SingleFrame(CombatTarget->GetActorLocation());	
-		
+	}
+	if (GetWorld()->TimeSince(InteractionData.lastInteractionCheckTime) > InteractionCheckFrequncy)
+	{
+		PerformInteractionCheck();
 	}
 }
 
@@ -175,6 +177,61 @@ void ASlashCharacter::BeginPlay()
 	}
 	Tags.Add(FName("EngageableTarget"));
 	InitializeSlashOverlay();
+}
+
+void ASlashCharacter::PerformInteractionCheck()
+{
+	InteractionData.lastInteractionCheckTime = GetWorld()->GetTimeSeconds();
+
+	FVector TraceStart{ GetPawnViewLocation()};
+	FVector TraceEnd{ TraceStart + (GetViewRotation().Vector() * InteractionCheckDistance) };
+
+	DRAW_VECTOR(TraceStart, TraceEnd);
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	FHitResult TraceHit;
+
+	if (GetWorld()->LineTraceSingleByChannel(TraceHit, TraceStart, TraceEnd, ECC_Visibility, Params))
+	{
+		if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
+		{
+			const float Distance = (TraceStart - TraceHit.ImpactPoint).Size();
+
+			if (TraceHit.GetActor() != InteractionData.CurrentInteractable && Distance <= InteractionCheckDistance)
+			{
+				FoundInteractable(TraceHit.GetActor());
+				return;
+			}
+
+			if (TraceHit.GetActor() == InteractionData.CurrentInteractable)
+			{
+				return;
+			}
+		}
+	}
+
+	NoInteractableFound();
+}
+
+void ASlashCharacter::FoundInteractable(AActor* NewInteractable)
+{
+}
+
+void ASlashCharacter::NoInteractableFound()
+{
+}
+
+void ASlashCharacter::BeginInteract()
+{
+}
+
+void ASlashCharacter::EndInteract()
+{
+}
+
+void ASlashCharacter::Interact()
+{
 }
 
 
