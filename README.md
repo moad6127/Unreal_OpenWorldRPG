@@ -35,7 +35,31 @@
 
 [언리얼 엔진 문서](https://docs.unrealengine.com/5.0/ko/enhanced-input-in-unreal-engine/)
 
-언리얼 엔진5의 기능중 하나로 이전 엔진4의 Input기능보다 더 확장성이 트리거와 모디파이어를 사용해 우선순위등을 정할수 있어 기존에 코딩으로 작업해야 했던 부분들을 코드 없이 작업이 가능해질수도 있어졌다.
+언리얼 엔진5에서 업데이트되 기능으로트리거와 모디파이어를 사용해 우선순위등을 정할수 있어 엔진4에서는  코딩으로 작업해야 했던 부분들을 코드 없이 작업이 가능해질수도 있어졌다.
+
+![Enhanced_Input_Actions](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/05c5b9b3-6e1b-456a-ac0e-0edd840dc255)
+> 엔진으로 InputAction을 만들고 기능에 필요한 값타입을 정한다.
+> 값타입에는 bool타입, float타입, vector2D타입, vector타입이 있으며 필요에따라 변경할수 있다.
+
+![mappingContext](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/241dd8f0-fd55-4c82-98c1-a39e60664405)
+>입력매핑컨텍스트에 Action들을 설정하고 매핑할 키를 선택해서 입력을 받게 만들수 있다.
+
+![EnhancedInput_ActionsAndFunc](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/c4652e8d-c66c-41ee-89cc-8cf235c53a74)
+>엔진에서 만들어진 InputAction과 매핑컨텍스트를 캐릭터클래스로 받기위해 변수를 선언한다.
+
+![Enhanced_Input_CharacterBlueprint](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/bcec9609-c0c5-4938-82ae-6d5faa90bc78)
+> 캐릭터 클래스에서 선언된 변수들에 만들어진 Input과 매핑컨텍스트를 캐릭터 블루프린트로 설정한다.
+
+![Enhanced_Input_Cpp_BeginPlay](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/7d5c39ba-1083-4104-b3aa-819e7fba2324)
+> 캐릭터 클래스의 변수로 선언된 매핑컨텍스트를 세팅하기위해 BeginPlay에서 다음과 같은 코드를 사용한다.
+>
+![EnhancedInput_SetupPlayerInputConponent](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/1523bb9a-0886-4925-8de4-c4a9a432cf85)
+>엔진4에서 사용하는것과 비슷하게 SetupPlayerInputComponent함수에서 각각에 필요한 함수로 Bind하여 기능을 사용하도록 만든다.
+
+
+![Enhanced_Input_Functions](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/767612b3-6048-4b6f-96d0-00b397a747d2)
+> 사용자의 입력이 들어오면 Input의 변수타입에 맞는 Value를 Value.Get으로 받아와서 입력값을 사용해 함수들을 구현한다.
+
 
 
 
@@ -44,6 +68,7 @@
 
 ----------------------------------------------------------------------------
 ## ***IK릭***
+
 
 
 
