@@ -167,8 +167,6 @@ void ASlashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	LockOnSphere->OnComponentBeginOverlap.AddDynamic(this, &ASlashCharacter::OnSphereOverlap);
-	LockOnSphere->OnComponentEndOverlap.AddDynamic(this, &ASlashCharacter::OnSphereEndOverlap);
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
@@ -177,6 +175,11 @@ void ASlashCharacter::BeginPlay()
 			SubSystem->AddMappingContext(SlashContext, 0);
 		}
 	}
+
+	LockOnSphere->OnComponentBeginOverlap.AddDynamic(this, &ASlashCharacter::OnSphereOverlap);
+	LockOnSphere->OnComponentEndOverlap.AddDynamic(this, &ASlashCharacter::OnSphereEndOverlap);
+
+
 	Tags.Add(FName("EngageableTarget"));
 	InitializeSlashOverlay();
 }
@@ -223,6 +226,8 @@ void ASlashCharacter::FoundInteractable(AActor* NewInteractable)
 
 	InteractionData.CurrentInteractable = NewInteractable;
 	TargetInteractable = NewInteractable;
+	
+	SlashHUD->UpdateInteractionWIdget(&TargetInteractable->InteractableData);
 
 	TargetInteractable->BeginFocus();
 }
@@ -241,7 +246,7 @@ void ASlashCharacter::NoInteractableFound()
 			TargetInteractable->EndFocus();
 		}
 
-		//TODO hide interfactionwidget
+		SlashHUD->HideInteractionWidget();
 
 		InteractionData.CurrentInteractable = nullptr;
 		TargetInteractable = nullptr;
@@ -256,7 +261,7 @@ void ASlashCharacter::BeginInteract()
 		if (IsValid(TargetInteractable.GetObject()))
 		{
 			TargetInteractable->BeginInteract();
-			if (FMath::IsNearlyZero(TargetInteractable->InteractablData.InteractionDuration, 0.1))
+			if (FMath::IsNearlyZero(TargetInteractable->InteractableData.InteractionDuration, 0.1))
 			{
 				Interact();
 			}
@@ -266,7 +271,7 @@ void ASlashCharacter::BeginInteract()
 					TimerHandleInteraction,
 					this,
 					&ASlashCharacter::Interact,
-					TargetInteractable->InteractablData.InteractionDuration,
+					TargetInteractable->InteractableData.InteractionDuration,
 					false
 				);
 			}
@@ -290,7 +295,7 @@ void ASlashCharacter::Interact()
 
 	if (IsValid(TargetInteractable.GetObject()))
 	{
-		TargetInteractable->Interact();
+		TargetInteractable->Interact(this);
 	}
 }
 
@@ -512,7 +517,7 @@ void ASlashCharacter::InitializeSlashOverlay()
 	APlayerController* PlayerContrller = Cast<APlayerController>(GetController());
 	if (PlayerContrller)
 	{
-		ASlashHUD* SlashHUD = Cast<ASlashHUD>(PlayerContrller->GetHUD());
+		SlashHUD = Cast<ASlashHUD>(PlayerContrller->GetHUD());
 		if (SlashHUD)
 		{
 			SlashOverlay = SlashHUD->GetSlashOverlay();

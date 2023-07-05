@@ -78,6 +78,7 @@ void AItem::BeginPlay()
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
 	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
 
+	InteractableData = InstanceItneractableData;
 }
 
 void AItem::BeginFocus()
@@ -106,7 +107,7 @@ void AItem::EndInteract()
 	UE_LOG(LogTemp, Warning, TEXT("EndInteraction!"))
 }
 
-void AItem::Interact()
+void AItem::Interact(ASlashCharacter* PlayerCharacter)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Interaction!"))
 }

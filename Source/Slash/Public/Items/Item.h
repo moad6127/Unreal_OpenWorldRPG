@@ -43,28 +43,28 @@ public:
 	//UPROPERTY()
 	//UInventoryComponent* OwningInventory;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Item Data", meta = (UIMin = 1 , UIMax = 100))
+	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	int32 Quantity;
 
-	UPROPERTY(EditAnywhere, Category = "Item Data")
+	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	FName ID;
 
-	UPROPERTY(EditAnywhere, Category = "Item Data")
+	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	EItemType ItemType;
 
-	UPROPERTY(EditAnywhere, Category = "Item Data")
+	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	EItemQuality ItemQuality;
 
-	UPROPERTY(EditAnywhere, Category = "Item Data")
+	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	FItemStatistics ItemStatistics;
 
-	UPROPERTY(EditAnywhere, Category = "Item Data")
+	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	FItemTextData TextData;
 
-	UPROPERTY(EditAnywhere, Category = "Item Data")
+	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	FItemNumericData NumericData;
 
-	UPROPERTY(EditAnywhere, Category = "Item Data")
+	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	FItemAssetData AssetData;
 	/**
 	* Item Data
@@ -76,11 +76,14 @@ protected:
 	* InteractionInterface
 	*/
 
+	UPROPERTY(EditInstanceOnly,Category = "Test")
+	FInteractableData InstanceItneractableData;
+
 	virtual void BeginFocus() override;
 	virtual void EndFocus() override;
 	virtual void BeginInteract() override;
 	virtual void EndInteract() override;
-	virtual void Interact() override;
+	virtual void Interact(class ASlashCharacter* PlayerCharacter) override;
 	/*** InteractionInterface*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sine Parameters")

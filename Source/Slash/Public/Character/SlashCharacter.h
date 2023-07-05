@@ -18,6 +18,7 @@ class UGroomComponent;
 class AItem;
 class UAnimMontage;
 class USphereComponent;
+class ASlashHUD;
 class USlashOverlay;
 class ASoul;
 class ATreasure;
@@ -183,8 +184,11 @@ private:
 	UPROPERTY()
 	USlashOverlay* SlashOverlay;
 
+	UPROPERTY()
+	ASlashHUD* SlashHUD;
+
 	/**
-	* LockOnFunc
+	* LockOn
 	*/
 	UPROPERTY(VisibleAnywhere)
 	USphereComponent* LockOnSphere;

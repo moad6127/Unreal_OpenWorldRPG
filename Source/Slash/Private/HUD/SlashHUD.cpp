@@ -3,6 +3,59 @@
 
 #include "HUD/SlashHUD.h"
 #include "HUD/SlashOverlay.h"
+#include "HUD/MainManu.h"
+#include "HUD/InteractionWidget.h"
+
+ASlashHUD::ASlashHUD()
+{
+}
+
+void ASlashHUD::DisplayMenu()
+{
+	if (MainMenuWidget)
+	{
+		bIsMenuVisible = true;
+		MainMenuWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void ASlashHUD::HideMenu()
+{
+	if (MainMenuWidget)
+	{
+		bIsMenuVisible = false;
+		MainMenuWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void ASlashHUD::ShowInteractionWidget()
+{
+	if (InteractionWidget)
+	{
+		InteractionWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void ASlashHUD::HideInteractionWidget()
+{
+	if (InteractionWidget)
+	{
+		InteractionWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void ASlashHUD::UpdateInteractionWIdget(const FInteractableData* InteractableData)
+{
+	if (InteractionWidget)
+	{
+		if (InteractionWidget->GetVisibility() == ESlateVisibility::Collapsed)
+		{
+			InteractionWidget->SetVisibility(ESlateVisibility::Visible);
+		}
+
+		InteractionWidget->UpdateWidget(InteractableData);
+	}
+}
 
 void ASlashHUD::BeginPlay()
 {
@@ -12,12 +65,30 @@ void ASlashHUD::BeginPlay()
 	if (World)
 	{
 		APlayerController* Controller = World->GetFirstPlayerController();
-		if (Controller && SlashOverlayClass)
+		if (Controller)
 		{
-			SlashOverlay = CreateWidget<USlashOverlay>(Controller, SlashOverlayClass);
-			SlashOverlay->AddToViewport();
+			if (SlashOverlayClass)
+			{
+				SlashOverlay = CreateWidget<USlashOverlay>(Controller, SlashOverlayClass);
+				SlashOverlay->AddToViewport();
+			}
+			if (MainMenuClass)
+			{
+				MainMenuWidget = CreateWidget<UMainManu>(Controller, MainMenuClass);
+				MainMenuWidget->AddToViewport(5);
+				MainMenuWidget->SetVisibility(ESlateVisibility::Collapsed);
+			}
+			if (InteractionWidgetClass)
+			{
+				InteractionWidget = CreateWidget<UInteractionWidget>(Controller, InteractionWidgetClass);
+				InteractionWidget->AddToViewport(-1);
+				InteractionWidget->SetVisibility(ESlateVisibility::Collapsed);
+			}
+
 		}
 	}
+
+
 
 
 }

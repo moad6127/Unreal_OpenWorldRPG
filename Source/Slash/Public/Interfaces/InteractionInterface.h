@@ -18,11 +18,11 @@ enum class EInteractableType : uint8
 
 
 USTRUCT()
-struct FInteractablData
+struct FInteractableData
 {
 	GENERATED_USTRUCT_BODY()
 
-	FInteractablData() :
+	FInteractableData() :
 		InteractableType(EInteractableType::EIT_Pickup),
 		Name(FText::GetEmpty()),
 		Action(FText::GetEmpty()),
@@ -70,7 +70,7 @@ public:
 	virtual void EndFocus();
 	virtual void BeginInteract();
 	virtual void EndInteract();
-	virtual void Interact();
+	virtual void Interact(class ASlashCharacter* PlayerCharacter);
 
-	FInteractablData InteractablData;
+	FInteractableData InteractableData;
 };
