@@ -87,6 +87,29 @@
 
 ![ScreenShot00005](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/fcb723e1-bdcb-4c07-ad7f-ca5ddd068cf0)
 
+언리얼엔진 기능중 하나인 컨트롤 릭기능을 이용해 Inverse Kinematic기능을 만들고 사용한다.
+기본적으로 캐릭터의 발아래에 SphereTrace를 사용해서 이동할 위치를 구한다음 IK_Bone의 위치를 이동시킨다.
+
+![FookIK_Init](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/c90787b7-cafd-4ec4-979c-1593d90b5bc3)
+> 캐릭터의 스켈레탈 메쉬의 가상화된 Bone의 위치를 실제 Bone위치로 변경시켜 두Bone을 동기화 시킨다.
+
+![FookIK_FootTrace](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/7168a95b-dd2c-4027-a58f-430c6f7e8e09)
+> 컨트롤 릭에서 사용할 FootTrace기능을 함수로 구현한다. Input된 Bone의 위치를 사용해 SphereTrace를 해 결과값을 리턴하도록 만들었다.
+
+![FookIK_SphereTrace](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/26213d8d-59ef-48c1-b85d-da76a1c9268c)
+> 만든 함수를 사용해 가상화된 Bone에서 Trace를 해 얻은 결과값들을 따로 변수로 만들어 저장한다.
+
+![FookIK_Interpolate](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/83de0f27-824a-4699-bc08-91c5c8dbf3d5)
+>얻은 결과값들을 보간해서 Bone들이 이동할 위치를 설정한다.
+
+![FookIK_LowerBoneCheck](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/efa7a875-4609-4967-b9bb-c6ad3869cb78)
+> 결과값중 더 작은값을 정한후 골반뼈의 위치를 잡는다.
+
+![FookIK_MoveVirtualBone](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/8e73a9e6-c8b5-405b-ab89-ca3614c40bb4)
+> 얻은 결과값을 토대로 실제 Bone의 위치를 변경시킨다.
+
+![FookIK_MoveBone](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/21ffccf4-a0ec-414b-8de2-3a06f2ec92b1)
+> FullBodyIK를 사용해서 이동한 위치에 따라서 모든 몸의 Bone이 자연스럽게 이동하도록 만든다.
 
 
 ---------------------------------------------------------------------------
@@ -95,6 +118,7 @@
 ## ***여러기능들***
 
 *LockOn*
+
 
 
 
