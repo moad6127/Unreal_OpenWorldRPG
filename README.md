@@ -119,7 +119,73 @@
 
 *LockOn*
 
+![ScreenShot00004](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/be821015-5205-4bf6-94d3-b5ab941590a7)
+주위에 여러개체의 Enemy 가 있을경우 LockOn을 사용해 하나의 개체에 집중할수 있게 만들었다.
+
+
+![LockOn](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/edd85046-c0b4-40d2-8b2a-123aa2c59051)
+> LockOn에 필요한 변수들인 LockOnSphere와 범위내의 Enemy클래스를 알기위해 TArray형식으로 변수를 선언하고, Overlap함수를 오버라이드 한다.
+
+![LockOn_SphereOvelapFunc](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/14c80049-b09a-4416-8347-7da4191e107c)
+> 범위내에 Enemy가 들어올경우 만든 TArray변수에 Enemy를 Unique하게 추가하고 범위 밖으로 나갈경우 제거한다, 이때 만약 LockOn된 Enemy일경우 LockOn된 Enemy도 배열에서 지운다.
+
+![LockOnFunc](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/ce33ed23-a85b-46d4-974b-d06b00113a73)
+> LockOn버튼을 눌렀을경우 현재 배열내에서 가장 가까운 Enemy를 LockOn하기위해 반복문을 사용해 가장 가까운 Enemy를 찾고 CombatTarget으로 만든다.
+
+![LockOn_Rotation](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/f1517c2b-7761-49ee-8cf8-9a111c683922)
+> 만약 LockOn된 CombatTarget이 존재할경우 공격할때 함수를 호출해서 Enemy방향으로 캐릭터를 회전시킨다.
+
+
+---------------------------------------------------------------------------
+
+# *Enemy*
+
+![Enemys](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/31e88e42-97ac-4fd9-8be5-af137171b01f)
+
+
+- [헤더파일 주소](https://github.com/moad6127/Unreal_OpenWorldRPG/blob/master/Source/Slash/Public/Enemy/Enemy.h)
+- [CPP파일 주소](https://github.com/moad6127/Unreal_OpenWorldRPG/blob/master/Source/Slash/Private/Enemy/Enemy.cpp)
+
+게임에서 등장하는 Enemy들로 기본적으로 정해진곳을 순찰하며, 플레이어를 발견하면 PawnSeen기능을 통해 플레이어를 추적하고 일정거리 이상오면 공격한다,
+이때 공격에서 MotionWarping을 사용해 공격애니메이션중에도 따라가서 공격하도록 만들었다.
+Enemy가 죽을경우 Soul을 Spawn하는데 캐릭터가 수집할수 있다.
+
+
+---------------------------------------------------------------------------
+## ***Patrol***
+
+![Enemy_Patrol](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/50bf8a9b-a6b8-4dbf-a790-ce5a7022515b)
+
+Enemy는 기본적으로 계속 순찰을 하며, 순찰할곳을 추가적으로 넣을수 있다.
+
+![Enemy_PatrolVal](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/f3f0a237-94be-4311-87a1-b2d5f78d6bb6)
+> Patrol에 필요한 변수들로 처음에 갈곳을 정한후 배열에 추가적으로 순찰할곳을 넣으면 반복적으로 순찰한다.
+>
+![Enemy_Init](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/1a364a50-181a-41ec-9d38-2e23413751ff)
+> Enemy의 BeginPlay에서 호출되는 함수로 이동에 필요한 AIController를 저장하고 기본 순찰지역으로 이동하도록 MoveTo함수를 호출한다.
+
+![Enemy_MoveToTarget](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/5affe652-f27c-4d3b-bf70-00b0af080a1e)
+> MoveTo함수에서 이동할 액터와 어느정도범위까지 이동할지 정한후 AIController의 함수를 호출해서 이동한다.
+>
+![EnemyTIck](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/d5fb124c-5d91-4be3-bb25-961934c15473)
+![Enemy_checkTarget](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/a0ff6b1a-6ce4-420b-be1f-acd8f842fa46)
+> Tick함수에서 현재 Enemy의 상태를 체크하면서 PatrolTarget이 범위에 들어오면 다시 새로운 Target을 정하고 일정한 시간이 지난후 이동시키도록 만들었다.
+
+![Enemy_ChooseTarget](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/5da21cd4-bcb9-462a-a6e6-71f27805155e)
+> Target이 일정범위에 들어오면 새로운 타겟을 정하기위해 호출되는 함수로, 변수로 선언된 PatrolTargets를 반복문으로 돌면서 현재 Target인지 체크한후에 만약 지금 Target과 같으면 제외시키면서 새로운 배열에 추가한다, 이후 랜덤하게 하나의 순찰지역을 선택해서 타겟으로 잡는다.
+> 
+![Enemy_TimerFinish](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/27c6f4ca-6fa7-4319-9c53-b461baae4bf6)
+> 타이머가 끝나면 호출되는 함수로 MoveTo함수를 호출해서 새로운 타겟으로 이동한다.
+
+---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
+## ***Pawn Seen***
+
 
 
 
 ---------------------------------------------------------------------------
+# *Item*
+
+
