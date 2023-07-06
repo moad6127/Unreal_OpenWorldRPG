@@ -119,7 +119,29 @@
 
 *LockOn*
 
+![ScreenShot00004](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/be821015-5205-4bf6-94d3-b5ab941590a7)
+주위에 여러개체의 Enemy 가 있을경우 LockOn을 사용해 하나의 개체에 집중할수 있게 만들었다.
 
+
+![LockOn](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/edd85046-c0b4-40d2-8b2a-123aa2c59051)
+> LockOn에 필요한 변수들인 LockOnSphere와 범위내의 Enemy클래스를 알기위해 TArray형식으로 변수를 선언하고, Overlap함수를 오버라이드 한다.
+
+![LockOn_SphereOvelapFunc](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/14c80049-b09a-4416-8347-7da4191e107c)
+> 범위내에 Enemy가 들어올경우 만든 TArray변수에 Enemy를 Unique하게 추가하고 범위 밖으로 나갈경우 제거한다, 이때 만약 LockOn된 Enemy일경우 LockOn된 Enemy도 배열에서 지운다.
+
+![LockOnFunc](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/ce33ed23-a85b-46d4-974b-d06b00113a73)
+> LockOn버튼을 눌렀을경우 현재 배열내에서 가장 가까운 Enemy를 LockOn하기위해 반복문을 사용해 가장 가까운 Enemy를 찾고 CombatTarget으로 만든다.
+
+![LockOn_Rotation](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/f1517c2b-7761-49ee-8cf8-9a111c683922)
+> 만약 LockOn된 CombatTarget이 존재할경우 공격할때 함수를 호출해서 Enemy방향으로 캐릭터를 회전시킨다.
 
 
 ---------------------------------------------------------------------------
+
+# *Enemy*
+
+
+
+
+
+# *Item*
