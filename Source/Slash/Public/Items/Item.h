@@ -69,22 +69,11 @@ public:
 	/**
 	* Item Data
 	*/
+
+	
 protected:
 	virtual void BeginPlay() override;
 
-	/**
-	* InteractionInterface
-	*/
-
-	UPROPERTY(EditInstanceOnly,Category = "Test")
-	FInteractableData InstanceItneractableData;
-
-	virtual void BeginFocus() override;
-	virtual void EndFocus() override;
-	virtual void BeginInteract() override;
-	virtual void EndInteract() override;
-	virtual void Interact(class ASlashCharacter* PlayerCharacter) override;
-	/*** InteractionInterface*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sine Parameters")
 	float Amplitude = 0.25f;

@@ -19,6 +19,7 @@ AItem::AItem()
 	ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+
 	RootComponent = ItemMesh;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
@@ -34,12 +35,6 @@ void AItem::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	RunningTime += DeltaTime;
-
-	if (ItemState == EItemState::EIS_Hovering)
-	{
-		AddActorWorldOffset(FVector(0.f, 0.f, TransformedSin()));
-	}
-
 }
 
 AItem* AItem::CreateItemCopy()
@@ -78,39 +73,8 @@ void AItem::BeginPlay()
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
 	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
 
-	InteractableData = InstanceItneractableData;
 }
 
-void AItem::BeginFocus()
-{
-	if (ItemMesh)
-	{
-		ItemMesh->SetRenderCustomDepth(true);
-	}
-}
-
-void AItem::EndFocus()
-{
-	if (ItemMesh)
-	{
-		ItemMesh->SetRenderCustomDepth(false);
-	}
-}
-
-void AItem::BeginInteract()
-{
-	UE_LOG(LogTemp,Warning, TEXT("BeginInteraction!"))
-}
-
-void AItem::EndInteract()
-{
-	UE_LOG(LogTemp, Warning, TEXT("EndInteraction!"))
-}
-
-void AItem::Interact(ASlashCharacter* PlayerCharacter)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Interaction!"))
-}
 
 float AItem::TransformedSin()
 {

@@ -35,9 +35,10 @@ void UInteractionWidget::UpdateWidget(const FInteractableData* InteractableData)
 		}
 		else
 		{
-			QuantityText->SetText(FText::Format(NSLOCTEXT("InteractionWidget", "QuantityText", "x{0}"),
-				InteractableData->Quantity));
 			QuantityText->SetVisibility(ESlateVisibility::Visible);
+			QuantityText->SetText(FText::Format(NSLOCTEXT("InteractionWidget", "QuantityText", "x{0}"),InteractableData->Quantity));
+			//QuantityText->SetText(FText::FromString(FString::Printf(TEXT("x{%d}"), InteractableData->Quantity)));
+			
 		}
 		break;
 	case EInteractableType::EIT_NonPlayerCharacter:
