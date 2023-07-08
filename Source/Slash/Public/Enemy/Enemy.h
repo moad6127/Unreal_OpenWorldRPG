@@ -77,16 +77,22 @@ private:
 	AActor* ChoosePatrolTarget();
 	void SpawnDefaultWeapon();
 
+	/**
+	* PawnSensingComponent
+	*/
+	UPROPERTY(VisibleAnywhere)
+	UPawnSensingComponent* PawnSensing;
 
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn); // callback for OnPawnSeen in UPawnSensingComponent
+	/**
+	* PawnSensingComponent
+	*/
 
 
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;
 
-	UPROPERTY(VisibleAnywhere)
-	UPawnSensingComponent* PawnSensing;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AWeapon> WeaponClass;
