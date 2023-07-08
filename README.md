@@ -182,8 +182,32 @@ Enemy는 기본적으로 계속 순찰을 하며, 순찰할곳을 추가적으�
 ---------------------------------------------------------------------------
 ## ***Pawn Seen***
 
+![Enemy_PawnSeen (2)](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/df91995d-4b06-46b6-898d-cc0a279d3922)
+
+Enemy 클래스에 PawnSensing컴포넌트를 추가해서 Enemy의 정해진 시야에 Actor가 들어오면 반응 하도록 만들수 있는 컴포넌트이다.
+시야뿐 아니라 발소리등으로 반응하도록 만들수도 있다.
+
+![Enemy_Value](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/6583f92d-086a-459e-893e-ed7c4e328d5d)
+> 컴포넌트를 사용하기위해 Enemy클래스 헤더파일에 변수를 선언하고 사용할 함수도 같이 선언한다.
+
+![Enemy_PawnSensing](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/6e5bcda6-5e05-43fc-b031-887cfd6741b4)
+>컴포넌트를 생성자에서 만든후 필요한 변수들을 초기화 해준다.
+
+![Enemy_BeginPlay](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/71479908-4a09-4f6e-aee0-710497899c29)
+> Enemy가 시야에 따라서 반응할수 있도록 BeginPlay 에서 델리게이트를 선언해준다.
+
+![Enemy_PawnSeen](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/314b5be2-d913-4afb-976b-279b6afbc520)
+> PawnSeen함수가 호출되면 순찰을 멈춘후, Enemy가 본 캐릭터를 추적하기 시작한다.
+
+![Enemy_ChaseTarget](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/ae6b4c02-4691-48b3-8d8a-18e2a28e4d8e)
+> PawnSeen으로 본 액터를 향해 Enemy가 이동한다.
 
 
+![Enemy_CheckCombatTarget](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/1221fe9f-3224-4c8b-a810-4ddf4a0268dd)
+> Tick함수에서 Enemy의 상태가 Chase상태일경우 CheckCombatTarget함수를 호출하게 된다.
+> 이때 Enemy와 캐릭터의 거리가 일정부분 멀어지게 되면 다시 순찰을 하도록하며, 공격 범위에 들어올경우 공격하도록 만들었다.
+
+![ScreenShot00004](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/cb7ed11b-c3d2-487f-8516-901fbd6cfef1)
 
 ---------------------------------------------------------------------------
 # *Item*
