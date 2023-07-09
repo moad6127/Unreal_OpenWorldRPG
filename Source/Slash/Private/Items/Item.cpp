@@ -8,6 +8,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Interfaces/PickupInterface.h"
 #include "Kismet/GameplayStatics.h"
+#include "Component/InventoryComponent.h"
 
 // Sets default values
 AItem::AItem()
@@ -57,8 +58,13 @@ void AItem::SetQuantity(const int32 NewQuantity)
 	{
 		Quantity = FMath::Clamp(NewQuantity, 0, NumericData.bIsStackable ? NumericData.MaxStackSize : 1);
 
-		// TODO 
-		// Inventory check
+		if (OwningInventory)
+		{
+			if (Quantity <= 0)
+			{
+				OwningInventory->RemoveSingleInstanceOfItem(this);
+			}
+		}
 	}
 }
 

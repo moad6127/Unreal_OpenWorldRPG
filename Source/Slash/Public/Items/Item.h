@@ -11,7 +11,7 @@
 class USphereComponent;
 class UNiagaraSystem;
 class UNiagaraComponent;
-
+class UInventoryComponent;
 enum class EItemState : uint8
 {
 	EIS_Hovering,
@@ -40,8 +40,8 @@ public:
 	/**
 	* Item Data
 	*/
-	//UPROPERTY()
-	//UInventoryComponent* OwningInventory;
+	UPROPERTY()
+	UInventoryComponent* OwningInventory;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	int32 Quantity;
