@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "GroomComponent.h"
 #include "Component/AttributeComponent.h"
+#include "Component/InventoryComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
 #include "Items/Soul.h"
@@ -58,6 +59,9 @@ ASlashCharacter::ASlashCharacter()
 	Eyebrows->SetupAttachment(GetMesh());
 	Eyebrows->AttachmentName = FString("head");
 
+	PlayerInventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("PlayerInventory"));
+	PlayerInventory->SetSlotCapacity(20);
+	PlayerInventory->SetWeightCapacity(50.f);
 }
 
 void ASlashCharacter::Tick(float DeltaTime)
@@ -160,6 +164,14 @@ void ASlashCharacter::GetPotion(APotionItem* Potion)
 	{
 		Attributes->Healing(Potion->GetHealAmount());
 		SetHUDHealth();
+	}
+}
+
+void ASlashCharacter::UpdateInteractionWidget() const
+{
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		SlashHUD->UpdateInteractionWIdget(&TargetInteractable->InteractableData);
 	}
 }
 

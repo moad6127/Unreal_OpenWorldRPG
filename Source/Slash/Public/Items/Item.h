@@ -37,6 +37,7 @@ public:
 	UFUNCTION(Category = Item)
 	virtual void Use(class ABaseCharacter* Character);
 
+	void ResetItemFlags();
 	/**
 	* Item Data
 	*/
@@ -66,6 +67,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	FItemAssetData AssetData;
+
+	bool bIsCopy = false;
+	bool bIsPickup = false;
 	/**
 	* Item Data
 	*/

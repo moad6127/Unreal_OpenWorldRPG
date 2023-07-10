@@ -23,6 +23,7 @@ class USlashOverlay;
 class ASoul;
 class ATreasure;
 class APotionItem;
+class UInventoryComponent;
 
 USTRUCT()
 struct FInteractionData
@@ -59,12 +60,15 @@ public:
 	virtual void AddGold(ATreasure* Treasure) override;
 	virtual void GetPotion(APotionItem* Potion) override;
 
+	void UpdateInteractionWidget() const;
 protected:
 	virtual void BeginPlay() override;
 
 	/**
-	* Interact
+	* Interact, Inventory
 	*/
+	UPROPERTY(VisibleAnywhere, Category = "Inventory")
+	UInventoryComponent* PlayerInventory;
 
 	UPROPERTY(VisibleAnywhere, Category = "Interaction")
 	TScriptInterface<IInteractionInterface> TargetInteractable;
@@ -217,6 +221,7 @@ private:
 public:
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
 	FORCEINLINE EActionState GetActionState() const { return ActionState; }
+	FORCEINLINE UInventoryComponent* GetInventory() const { return PlayerInventory; }
 
 	FORCEINLINE bool IsInteracting() const { return GetWorldTimerManager().IsTimerActive(TimerHandleInteraction); }
 };

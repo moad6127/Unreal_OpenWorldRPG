@@ -48,6 +48,7 @@ AItem* AItem::CreateItemCopy()
 	ItemCopy->NumericData = this->NumericData;
 	ItemCopy->ItemStatistics = this->ItemStatistics;
 	ItemCopy->AssetData = this->AssetData;
+	ItemCopy->bIsCopy = true;
 
 	return ItemCopy;
 }
@@ -70,6 +71,12 @@ void AItem::SetQuantity(const int32 NewQuantity)
 
 void AItem::Use(ABaseCharacter* Character)
 {
+}
+
+void AItem::ResetItemFlags()
+{
+	bIsCopy = false;
+	bIsPickup = false;
 }
 
 void AItem::BeginPlay()

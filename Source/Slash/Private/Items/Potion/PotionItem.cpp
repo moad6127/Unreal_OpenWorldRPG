@@ -3,6 +3,8 @@
 
 #include "Items/Potion/PotionItem.h"
 #include "Interfaces/PickupInterface.h"
+#include "Character/SlashCharacter.h"
+#include "Component/InventoryComponent.h"
 
 APotionItem::APotionItem()
 {
@@ -90,9 +92,38 @@ void APotionItem::TakePickup(const ASlashCharacter* Taker)
 	{
 		if (ItemReference)
 		{
-			//if(UInventoryComponent* PlyerInventory = Taker->GetInventory())
+			if (UInventoryComponent* PlayerInventory = Taker->GetInventory())
+			{
+				const FItemAddResult AddResult = PlayerInventory->HandleAddItem(ItemReference);
 
-			
+				switch (AddResult.OperationResult)
+				{
+				case EItemAddResult::EIAR_NoItemAdded:
+					break;
+
+				case EItemAddResult::EIAR_PartialAmountItemAdded:
+					UpdateInteractableData();
+					Taker->UpdateInteractionWidget();
+					break;
+
+				case EItemAddResult::EIAR_AllItemAdded:
+					Destroy();
+					break;
+
+				default:
+					break;
+				}
+
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *AddResult.ResultMessage.ToString());
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Inventory is null!!"));
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Pickup interal item reference was somehow null"));
 		}
 	}
 }
