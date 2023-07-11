@@ -87,6 +87,8 @@ protected:
 	void BeginInteract();
 	void EndInteract();
 	void Interact();
+	void ToggleMenu();
+
 	/**
 	* Enhanced Input
 	*/
@@ -117,6 +119,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* InteractionAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* InventoryKeyAction;
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);

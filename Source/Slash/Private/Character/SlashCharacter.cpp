@@ -100,6 +100,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(DodgeAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Dodge);
 		EnhancedInputComponent->BindAction(InteractionAction, ETriggerEvent::Started, this, &ASlashCharacter::BeginInteract);
 		EnhancedInputComponent->BindAction(InteractionAction, ETriggerEvent::Completed, this, &ASlashCharacter::EndInteract);
+		EnhancedInputComponent->BindAction(InventoryKeyAction, ETriggerEvent::Triggered, this, &ASlashCharacter::ToggleMenu);
 	}
 
 }
@@ -309,6 +310,11 @@ void ASlashCharacter::Interact()
 	{
 		TargetInteractable->Interact(this);
 	}
+}
+
+void ASlashCharacter::ToggleMenu()
+{
+	SlashHUD->ToggleMenu();
 }
 
 
