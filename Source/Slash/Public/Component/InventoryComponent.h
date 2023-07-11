@@ -97,7 +97,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(Category = "Inventory")
-	FItemAddResult HandleNonStackableItems(AItem* ItemIn, int32 RequestedAddAmount);
+	FItemAddResult HandleNonStackableItems(AItem* ItemIn);
 	UFUNCTION(Category = "Inventory")
 	int32 HandleStackableItems(AItem* ItemIn, int32 RequestedAddAmount);
 	UFUNCTION(Category = "Inventory")

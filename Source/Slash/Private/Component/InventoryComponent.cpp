@@ -106,7 +106,7 @@ void UInventoryComponent::SplitExistingStack(AItem* ItemIn, const int32 AmountTo
 	}
 }
 
-FItemAddResult UInventoryComponent::HandleNonStackableItems(AItem* ItemIn, int32 RequestedAddAmount)
+FItemAddResult UInventoryComponent::HandleNonStackableItems(AItem* ItemIn)
 {
 	if (FMath::IsNearlyZero(ItemIn->GetItemSingleWeight()) || ItemIn->GetItemStackWeight() < 0)
 	{
@@ -128,9 +128,9 @@ FItemAddResult UInventoryComponent::HandleNonStackableItems(AItem* ItemIn, int32
 
 	}
 
-	AddNewItem(ItemIn, RequestedAddAmount);
+	AddNewItem(ItemIn, 1);
 	
-	return FItemAddResult::AddedAll(RequestedAddAmount, FText::Format(
+	return FItemAddResult::AddedAll(1, FText::Format(
 		FText::FromString("Successfully added {0} to the Inventory."), ItemIn->TextData.Name));
 
 }
@@ -149,7 +149,7 @@ FItemAddResult UInventoryComponent::HandleAddItem(AItem* InputItem)
 		//non statck
 		if (!InputItem->NumericData.bIsStackable)
 		{
-			return HandleNonStackableItems(InputItem, InitialRequestedAddAmount);
+			return HandleNonStackableItems(InputItem);
 		}
 
 		//stackable
@@ -157,20 +157,31 @@ FItemAddResult UInventoryComponent::HandleAddItem(AItem* InputItem)
 
 		if (StackableAmountAdded == InitialRequestedAddAmount)
 		{
+			return FItemAddResult::AddedAll(InitialRequestedAddAmount, FText::Format(
+				FText::FromString("Successfully added {0} {1} to the Inventory."),
+				InitialRequestedAddAmount,
+				InputItem->TextData.Name));
 
 		}
 		
 		if (StackableAmountAdded < InitialRequestedAddAmount && StackableAmountAdded > 0)
 		{
-
+			return FItemAddResult::AddedPartial(StackableAmountAdded, FText::Format(
+				FText::FromString("Partial amount of {0} added to the inventory, Numer added = {1}"),
+				InputItem->TextData.Name,
+				StackableAmountAdded));
 		}
 
 		if (StackableAmountAdded <= 0)
 		{
-
+			return FItemAddResult::AddedNone(FText::Format(
+				FText::FromString("Couldn't add {0} to the inventory. No remaining inventory slots, or invaild ietm."),
+				InputItem->TextData.Name));
 		}
 	}
-	return FItemAddResult();
+
+	check(false);
+	return FItemAddResult::AddedNone(FText::FromString("TryAddItem fallthrough error. GetOwner() check somehow failed."));
 }
 
 void UInventoryComponent::AddNewItem(AItem* Item, const int32 AmountToAdd)
