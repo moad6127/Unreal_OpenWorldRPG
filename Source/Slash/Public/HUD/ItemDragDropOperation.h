@@ -9,9 +9,24 @@
 /**
  * 
  */
+class UBorder;
+class UImage;
+class UTextBlock;
+
 UCLASS()
 class SLASH_API UItemDragDropOperation : public UDragDropOperation
 {
 	GENERATED_BODY()
 	
+protected:
+
+	UPROPERTY(VisibleAnywhere, Category = "Drag Item Visual", meta = (BindWidget))
+	UBorder* ItemBorder;
+
+	UPROPERTY(VisibleAnywhere, Category = "Drag Item Visual", meta = (BindWidget))
+	UImage* ItemIcon;
+
+	UPROPERTY(VisibleAnywhere, Category = "Drag Item Visual", meta = (BindWidget))
+	UTextBlock* ItemQuantity;
+		
 };

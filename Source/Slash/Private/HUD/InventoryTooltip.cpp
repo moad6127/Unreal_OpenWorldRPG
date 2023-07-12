@@ -14,12 +14,14 @@ void UInventoryTooltip::NativeConstruct()
 	switch (ItemBeingHovered->ItemType)
 	{
 	case EItemType::EIT_Weapon:
+		ItemType->SetText(FText::FromString("Weapon"));
+		ArmorRating->SetVisibility(ESlateVisibility::Collapsed);
 		break;
+
 	case EItemType::EIT_Pickups:
 		ItemType->SetText(FText::FromString("Consumable"));
 		DamageValue->SetVisibility(ESlateVisibility::Collapsed);
 		ArmorRating->SetVisibility(ESlateVisibility::Collapsed);
-		SellValue->SetVisibility(ESlateVisibility::Collapsed);
 		break;
 	case EItemType::EIT_AutoPickups:
 		break;
@@ -31,15 +33,19 @@ void UInventoryTooltip::NativeConstruct()
 	ArmorRating->SetText(FText::AsNumber(0));
 	UsageText->SetText(ItemBeingHovered->TextData.UsageText);
 	ItemDescription->SetText(ItemBeingHovered->TextData.Description);
-	SellValue->SetText(FText::AsNumber(ItemBeingHovered->ItemStatistics.SellValue));
-	StackWeightValue->SetText(FText::AsNumber(ItemBeingHovered->GetItemStackWeight()));
+
+	const FString WeightString = {"Weight :  " + FString::SanitizeFloat(ItemBeingHovered->GetItemStackWeight())};
+	StackWeightValue->SetText(FText::FromString(WeightString));
+
 	if (ItemBeingHovered->NumericData.bIsStackable)
 	{
-		StackSizeText->SetText(FText::AsNumber(ItemBeingHovered->NumericData.MaxStackSize));
+		MaxStackSize->SetText(FText::AsNumber(ItemBeingHovered->NumericData.MaxStackSize));
+		StackSize->SetText(FText::AsNumber(ItemBeingHovered->Quantity));
 	}
 	else
 	{
-		StackSizeText->SetVisibility(ESlateVisibility::Collapsed);
+		MaxStackSize->SetVisibility(ESlateVisibility::Collapsed);
+		StackSize->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
 }

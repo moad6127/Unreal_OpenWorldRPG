@@ -26,13 +26,14 @@ void UInventoryPanel::NativeOnInitialized()
 
 void UInventoryPanel::SetInfoText() const
 {
-	WeigthInfo->SetText(FText::Format(FText::FromString("{0}/{1}"),
-		InventoryReference->GetInventoryTotalWeight(),
-		InventoryReference->GetWeightCapacity()));
+	const FString WeightValue = { FString::SanitizeFloat(InventoryReference->GetInventoryTotalWeight()) + "/" +
+	FString::SanitizeFloat(InventoryReference->GetWeightCapacity()) };
 
-	CapacityInfo->SetText(FText::Format(FText::FromString("{0}/{1}"),
-		InventoryReference->GetInventoryContents().Num(),
-		InventoryReference->GetSlotCapacity()));
+	const FString CapacityValue = { FString::FromInt(InventoryReference->GetInventoryContents().Num()) + "/" +
+	FString::FromInt(InventoryReference->GetSlotCapacity()) };
+
+	WeigthInfo->SetText(FText::FromString(WeightValue));
+	CapacityInfo->SetText(FText::FromString(CapacityValue));
 }
 
 
@@ -48,6 +49,8 @@ void UInventoryPanel::RefreshInventory()
 
 			InventoryPanel->AddChildToWrapBox(ItemSlot);
 		}
+
+		SetInfoText();
 	}
 }
 
