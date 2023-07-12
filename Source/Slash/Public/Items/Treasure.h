@@ -13,7 +13,8 @@ UCLASS()
 class SLASH_API ATreasure : public AItem
 {
 	GENERATED_BODY()
-	
+public:
+	ATreasure();
 protected:
 	virtual void OnSphereOverlap(
 		UPrimitiveComponent* OverlappedComponent,

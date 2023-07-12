@@ -176,6 +176,29 @@ void ASlashCharacter::UpdateInteractionWidget() const
 	}
 }
 
+void ASlashCharacter::DropItem(AItem* ItemToDrop, const int32 QuantityToDrop)
+{
+	if (PlayerInventory->FindMatchingItem(ItemToDrop))
+	{
+		FActorSpawnParameters SpawnParms;
+		SpawnParms.Owner = this;
+		SpawnParms.bNoFail = true;
+		SpawnParms.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		const FVector SpawnLocation = GetActorLocation() + (GetActorForwardVector() * 50.f);
+		const FTransform SpawnTransform(GetActorRotation(), SpawnLocation);
+
+		const int32 RemoveQuantity = PlayerInventory->RemoveAmountOfItem(ItemToDrop, QuantityToDrop);
+		APotionItem* DropItem = GetWorld()->SpawnActor<APotionItem>(APotionItem::StaticClass(), SpawnTransform, SpawnParms);
+
+		DropItem->InitializeDrop(ItemToDrop,RemoveQuantity);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item to Drop Fail!!"));
+	}
+}
+
 void ASlashCharacter::BeginPlay()
 {
 	Super::BeginPlay();

@@ -9,6 +9,7 @@
 APotionItem::APotionItem()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
 }
 
 void APotionItem::BeginPlay()

@@ -61,6 +61,7 @@ public:
 	virtual void GetPotion(APotionItem* Potion) override;
 
 	void UpdateInteractionWidget() const;
+	void DropItem(AItem* ItemToDrop, const int32 QuantityToDrop);
 protected:
 	virtual void BeginPlay() override;
 

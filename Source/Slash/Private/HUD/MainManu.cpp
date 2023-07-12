@@ -3,7 +3,8 @@
 
 #include "HUD/MainManu.h"
 #include "Character/SlashCharacter.h"
-
+#include "HUD/ItemDragDropOperation.h"
+#include "Items/Item.h"
 void UMainManu::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
@@ -18,7 +19,12 @@ void UMainManu::NativeConstruct()
 
 bool UMainManu::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
-	return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
-	//TODO cast operation item drag, drop player call drop Item 
+	const UItemDragDropOperation* ItemDragDrop = Cast<UItemDragDropOperation>(InOperation);
+	if (PlayerCharacter && ItemDragDrop->SourceItem)
+	{
+		PlayerCharacter->DropItem(ItemDragDrop->SourceItem, ItemDragDrop->SourceItem->Quantity);
+		return true;
+	}
+	return false;
 }

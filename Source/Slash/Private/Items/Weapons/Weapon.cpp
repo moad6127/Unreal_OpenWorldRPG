@@ -14,7 +14,7 @@ AWeapon::AWeapon()
 {
 	WeaponBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Weapon Box"));
 	WeaponBox->SetupAttachment(GetRootComponent());
-	WeaponBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponBox->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	WeaponBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	WeaponBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 
@@ -22,6 +22,7 @@ AWeapon::AWeapon()
 	BoxTraceStart->SetupAttachment(GetRootComponent());
 	BoxTraceEnd = CreateDefaultSubobject<USceneComponent>(TEXT("BoxTraceEnd"));
 	BoxTraceEnd->SetupAttachment(GetRootComponent());
+
 }
 
 void AWeapon::BeginPlay()
@@ -34,6 +35,8 @@ void AWeapon::BeginPlay()
 void AWeapon::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
 	ItemState = EItemState::EIS_Equipped;
+
+	ItemMesh->SetSimulatePhysics(false);
 	SetOwner(NewOwner);
 	SetInstigator(NewInstigator);
 	AttachMeshToSocket(InParent, InSocketName);

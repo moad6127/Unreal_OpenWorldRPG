@@ -3,6 +3,8 @@
 
 #include "HUD/InventoryItemSlot.h"
 #include "HUD/InventoryTooltip.h"
+#include "HUD/DragItemVisual.h"
+#include "HUD/ItemDragDropOperation.h"
 #include "Items/Item.h"
 #include "Components/Border.h"
 #include "Components/Image.h"
@@ -60,7 +62,16 @@ void UInventoryItemSlot::NativeConstruct()
 
 FReply UInventoryItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-    return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+    FReply Reply = Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+
+    if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+    {
+        return Reply.Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
+    }
+
+    // 오른쪽을 클릭할경우 서브메뉴 만들기
+
+    return Reply.Unhandled();
 }
 
 void UInventoryItemSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
@@ -71,6 +82,23 @@ void UInventoryItemSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 void UInventoryItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
     Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
+
+    if (DragItemVisualClass)
+    {
+        UDragItemVisual* DragVisual = CreateWidget<UDragItemVisual>(this, DragItemVisualClass);
+        DragVisual->ItemIcon->SetBrushFromTexture(ItemReference->AssetData.Icon);
+        DragVisual->ItemBorder->SetBrushColor(ItemBorder->GetBrushColor());
+        DragVisual->ItemQuantity->SetText(FText::AsNumber(ItemReference->Quantity));
+
+        UItemDragDropOperation* DragItemOperation = NewObject<UItemDragDropOperation>();
+        DragItemOperation->SourceItem = ItemReference;
+        DragItemOperation->SourceInventory = ItemReference->OwningInventory;
+
+        DragItemOperation->DefaultDragVisual = DragVisual;
+        DragItemOperation->Pivot = EDragPivot::TopLeft;
+
+        OutOperation = DragItemOperation;
+    }
 }
 
 bool UInventoryItemSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
