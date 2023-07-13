@@ -29,8 +29,13 @@ void UInventoryTooltip::NativeConstruct()
 		break;
 	}
 	ItemName->SetText(ItemBeingHovered->TextData.Name);
-	DamageValue->SetText(FText::AsNumber(0));
-	ArmorRating->SetText(FText::AsNumber(0));
+
+	const FString DamageValueString = { "Damage : " + FString::SanitizeFloat(0.f)};
+	DamageValue->SetText(FText::FromString(DamageValueString));
+
+	const FString ArmorValueString = { "Armor : " + FString::SanitizeFloat(0.f) };
+	ArmorRating->SetText(FText::FromString(ArmorValueString));
+
 	UsageText->SetText(ItemBeingHovered->TextData.UsageText);
 	ItemDescription->SetText(ItemBeingHovered->TextData.Description);
 
@@ -39,13 +44,12 @@ void UInventoryTooltip::NativeConstruct()
 
 	if (ItemBeingHovered->NumericData.bIsStackable)
 	{
-		MaxStackSize->SetText(FText::AsNumber(ItemBeingHovered->NumericData.MaxStackSize));
-		StackSize->SetText(FText::AsNumber(ItemBeingHovered->Quantity));
+		const FString MaxStackSizeString = { "Max Stack Size : " + FString::FromInt(ItemBeingHovered->NumericData.MaxStackSize)};
+		MaxStackSize->SetText(FText::FromString(MaxStackSizeString));
 	}
 	else
 	{
 		MaxStackSize->SetVisibility(ESlateVisibility::Collapsed);
-		StackSize->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
 }

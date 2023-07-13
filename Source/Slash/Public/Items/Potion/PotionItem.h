@@ -22,16 +22,16 @@ public:
 	/**
 	* PickupItemValue
 	*/
-	UPROPERTY(EditInstanceOnly, Category = "Item DataBase")
+	UPROPERTY(EditAnywhere, Category = "Item DataBase")
 	UDataTable* ItemDataTable;
 
-	UPROPERTY(EditInstanceOnly, Category = "Item DataBase")
+	UPROPERTY(EditAnywhere, Category = "Item DataBase")
 	FName DesiredItemID;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item DataBase")
 	AItem* ItemReference;
 
-	UPROPERTY(EditInstanceOnly, Category = "Item DataBase")
+	UPROPERTY(EditAnywhere, Category = "Item DataBase")
 	int32 ItemQuantity;
 
 	UPROPERTY(VisibleInstanceOnly, Category = "Item DataBase")
