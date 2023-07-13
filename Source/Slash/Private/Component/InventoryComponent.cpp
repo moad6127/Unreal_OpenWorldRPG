@@ -137,7 +137,92 @@ FItemAddResult UInventoryComponent::HandleNonStackableItems(AItem* ItemIn)
 
 int32 UInventoryComponent::HandleStackableItems(AItem* ItemIn, int32 RequestedAddAmount)
 {
-	return int32();
+	if (RequestedAddAmount <= 0 || FMath::IsNearlyZero(ItemIn->GetItemStackWeight()))
+	{
+		return 0;
+	}
+
+	int32 AmountToDistribute = RequestedAddAmount;
+
+	//ItemIn 이 인벤토리에 이미 있는지 확인하고 FullStack이 아닌지 체크한다
+	AItem* ExistingItemStack = FindNextPartialStack(ItemIn);
+	while (ExistingItemStack)
+	{
+		//다음 전체 스택을 만드는 데 필요한 기존 항목 수 계산
+		const int32 AmountToMakeFullStack = CalculateNumberForFullStack(ExistingItemStack, AmountToDistribute);
+		//중량 용량을 기준으로 실제 운반할 수 있는 AmountToMakeFullStack 수 계산
+		const int32 WeightLimitAddToAmount = CalculateWeightAddAmount(ExistingItemStack, AmountToMakeFullStack);
+
+		// as long as the remaining amount of the item dose not overflow weight capacity
+		if (WeightLimitAddToAmount > 0)
+		{
+			// adjust the existing item stack quantity and inventory total weigth
+			ExistingItemStack->SetQuantity(ExistingItemStack->Quantity + WeightLimitAddToAmount);
+			InventoryTotalWeight += (ExistingItemStack->GetItemSingleWeight() * WeightLimitAddToAmount);
+
+			// adjust the count to be distributed
+			AmountToDistribute -= WeightLimitAddToAmount;
+
+			ItemIn->SetQuantity(AmountToDistribute);
+
+			// if max weight capacity is reached, no need to run the loop again
+			if (InventoryTotalWeight >= InventoryWeightCapacity)
+			{
+				OnInventoryUpdated.Broadcast();
+				return RequestedAddAmount - AmountToDistribute;
+			}
+		}
+		else if (WeightLimitAddToAmount <= 0)
+		{
+			if (AmountToDistribute != RequestedAddAmount)
+			{
+				//this block will be reached if distributing an item across multiple stack
+				//and the weight limit is hit during that process
+				OnInventoryUpdated.Broadcast();
+				return RequestedAddAmount - AmountToDistribute;
+			}
+
+			return 0;
+		}
+
+		if (AmountToDistribute <= 0)
+		{
+			//all of the input item was distributed across existing stack
+			OnInventoryUpdated.Broadcast();
+			return RequestedAddAmount;
+		}
+		// check i there is still another valid partial stack of the input item
+		ExistingItemStack = FindNextPartialStack(ItemIn);
+	}
+
+	//no more partial stacks found, check if a new stack can added
+	if (InventoryContents.Num() + 1 <= InventorySlotCapacity)
+	{
+		// attempt to add as many from the remaining item quantity that can fit inventory weight capacity
+		const int32 WeightLimitAddAmount = CalculateWeightAddAmount(ItemIn, AmountToDistribute);
+
+		if (WeightLimitAddAmount > 0)
+		{
+			// if there is still more item distribute, but weight limit has been reached
+			if (WeightLimitAddAmount < AmountToDistribute)
+			{
+				// adjust the input item and add a new stack will as many as can be held
+				AmountToDistribute -= WeightLimitAddAmount;
+				ItemIn->SetQuantity(AmountToDistribute);
+
+				// create a copy since only a partial stack begin added
+				AddNewItem(ItemIn->CreateItemCopy(), WeightLimitAddAmount);
+				return RequestedAddAmount - AmountToDistribute;
+			}
+
+			//otherwise, the full raminder of the stack can be added
+			AddNewItem(ItemIn, AmountToDistribute);
+			return RequestedAddAmount;
+		}
+	}
+
+	OnInventoryUpdated.Broadcast();
+	return RequestedAddAmount - AmountToDistribute;
 }
 
 FItemAddResult UInventoryComponent::HandleAddItem(AItem* InputItem)
