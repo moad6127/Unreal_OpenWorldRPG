@@ -60,7 +60,9 @@ bool UInventoryPanel::NativeOnDrop(const FGeometry& InGeometry, const FDragDropE
 	const UItemDragDropOperation* ItemDragDrop = Cast<UItemDragDropOperation>(InOperation);
 	if (ItemDragDrop->SourceItem && InventoryReference)
 	{
+		//returning true will stop the drop operation at this widet
 		return true;
 	}
+	//returning false will cause the drop operation to fall through the underlying widget
 	return false;
 }
