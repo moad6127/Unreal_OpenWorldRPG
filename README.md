@@ -115,9 +115,8 @@
 ---------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------
-## ***여러기능들***
+## ***LockOn***
 
-*LockOn*
 
 ![ScreenShot00004](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/be821015-5205-4bf6-94d3-b5ab941590a7)
 주위에 여러개체의 Enemy 가 있을경우 LockOn을 사용해 하나의 개체에 집중할수 있게 만들었다.
@@ -135,6 +134,19 @@
 ![LockOn_Rotation](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/f1517c2b-7761-49ee-8cf8-9a111c683922)
 > 만약 LockOn된 CombatTarget이 존재할경우 공격할때 함수를 호출해서 Enemy방향으로 캐릭터를 회전시킨다.
 
+
+---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
+
+## ***InventorySystem***
+
+![Character_inventory](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/cf12d891-00b9-4196-bfec-e6a24e44fb76)
+
+
+- [헤더파일 주소](https://github.com/moad6127/Unreal_OpenWorldRPG/blob/master/Source/Slash/Public/Component/InventoryComponent.h)
+- [CPP파일 주소](https://github.com/moad6127/Unreal_OpenWorldRPG/blob/master/Source/Slash/Private/Component/InventoryComponent.cpp)
+- 
 
 ---------------------------------------------------------------------------
 
