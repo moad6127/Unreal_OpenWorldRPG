@@ -16,6 +16,7 @@ class UInventoryTooltip;
 class UBorder;
 class UImage;
 class UTextBlock;
+class UInventoryItemSubSlot;
 
 UCLASS()
 class SLASH_API UInventoryItemSlot : public UUserWidget
@@ -31,6 +32,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Slot")
 	TSubclassOf<UInventoryTooltip> ToolTipClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory Slot")
+	TSubclassOf<UInventoryItemSubSlot> SubSlotClass;
 
 	UPROPERTY(VisibleAnywhere, Category = "Inventory Slot")
 	AItem* ItemReference;

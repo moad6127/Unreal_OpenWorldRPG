@@ -70,7 +70,10 @@ FReply UInventoryItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, 
     }
 
     // 오른쪽을 클릭할경우 서브메뉴 만들기
+    if (InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
+    {
 
+    }
     return Reply.Unhandled();
 }
 
