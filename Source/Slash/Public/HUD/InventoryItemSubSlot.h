@@ -8,6 +8,7 @@
 
 
 class UButton;
+class AItem;
 UCLASS()
 class SLASH_API UInventoryItemSubSlot : public UUserWidget
 {
@@ -15,8 +16,16 @@ class SLASH_API UInventoryItemSubSlot : public UUserWidget
 
 
 public:
+
+	UPROPERTY(VisibleAnywhere, Category = "Inventory Slot")
+	AItem* ItemReference;
+
+	UPROPERTY(meta = (BindWidget))
 	UButton* UseButton;
 
+	UFUNCTION()
+	void UseButtonClick();
 
-	void ButtonClick();
+protected:
+	virtual void NativeConstruct() override;
 };

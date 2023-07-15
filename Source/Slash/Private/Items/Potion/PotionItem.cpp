@@ -70,6 +70,15 @@ void APotionItem::EndFocus()
 	}
 }
 
+void APotionItem::Use(ABaseCharacter* Character)
+{
+	IPickupInterface* PickupInterface = Cast<IPickupInterface>(Character);
+	if (PickupInterface)
+	{
+		PickupInterface->GetPotion(this);
+	}
+}
+
 void APotionItem::Interact(ASlashCharacter* PlayerCharacter)
 {
 	if (PlayerCharacter)

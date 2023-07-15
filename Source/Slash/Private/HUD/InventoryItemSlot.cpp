@@ -9,6 +9,7 @@
 #include "Components/Border.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "HUD/InventoryItemSubSlot.h"
 
 void UInventoryItemSlot::NativeOnInitialized()
 {
@@ -72,6 +73,14 @@ FReply UInventoryItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, 
     // 오른쪽을 클릭할경우 서브메뉴 만들기
     if (InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
     {
+        if (SubSlotClass && ItemReference)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("SlotClick"));
+            UInventoryItemSubSlot* SubMenu = CreateWidget<UInventoryItemSubSlot>(this, SubSlotClass);
+            SubMenu->ItemReference = ItemReference;
+            AddToViewport();
+            return Reply.Unhandled();
+        }
 
     }
     return Reply.Unhandled();

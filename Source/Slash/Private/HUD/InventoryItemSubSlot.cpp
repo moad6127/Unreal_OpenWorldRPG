@@ -2,12 +2,20 @@
 
 
 #include "HUD/InventoryItemSubSlot.h"
+#include "Components/Button.h"
+#include "Items/Item.h"
 
 
+void UInventoryItemSubSlot::NativeConstruct()
+{
+	Super::NativeConstruct();
+}
 
 
+void UInventoryItemSubSlot::UseButtonClick()
+{
 
-
+}
 
 
 

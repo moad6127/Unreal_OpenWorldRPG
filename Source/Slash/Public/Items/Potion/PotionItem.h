@@ -43,7 +43,7 @@ public:
 
 	virtual void BeginFocus() override;
 	virtual void EndFocus() override;
-	
+	virtual void Use(class ABaseCharacter* Character) override;
 protected:
 	virtual void BeginPlay() override;
 
