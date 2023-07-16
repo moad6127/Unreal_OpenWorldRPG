@@ -28,7 +28,7 @@ void UInventoryItemSubSlot::UseButtonClick()
 {
 	if (ItemReference && OwningCharacter)
 	{
-		APotionItem* Potion = Cast<APotionItem>(ItemReference->StaticClass());
+		APotionItem* Potion = NewObject<APotionItem>(ItemReference->StaticClass());
 		if (Potion)
 		{
 			Potion->Use(OwningCharacter);

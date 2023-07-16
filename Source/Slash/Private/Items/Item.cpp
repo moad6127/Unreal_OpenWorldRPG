@@ -72,6 +72,11 @@ void AItem::SetQuantity(const int32 NewQuantity)
 void AItem::Use(ASlashCharacter* Character)
 {
 	UE_LOG(LogTemp, Warning, TEXT("ItemUse"));
+	if (OwningInventory)
+	{
+		OwningInventory->RemoveAmountOfItem(this, 1);
+	}
+
 }
 
 void AItem::ResetItemFlags()
