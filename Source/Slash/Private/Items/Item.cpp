@@ -69,8 +69,9 @@ void AItem::SetQuantity(const int32 NewQuantity)
 	}
 }
 
-void AItem::Use(ABaseCharacter* Character)
+void AItem::Use(ASlashCharacter* Character)
 {
+	UE_LOG(LogTemp, Warning, TEXT("ItemUse"));
 }
 
 void AItem::ResetItemFlags()

@@ -11,6 +11,7 @@
  */
 
 class UDataTable;
+class ASlashCharacter;
 
 UCLASS()
 class SLASH_API APotionItem : public AItem
@@ -43,12 +44,12 @@ public:
 
 	virtual void BeginFocus() override;
 	virtual void EndFocus() override;
-	virtual void Use(class ABaseCharacter* Character) override;
+	virtual void Use(class ASlashCharacter* Character) override;
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, Category = Potion)
-	float HealAmount;
+	float HealAmount = 20.f;
 
 
 	virtual void Interact(class ASlashCharacter* PlayerCharacter) override;
@@ -62,6 +63,5 @@ protected:
 public:
 
 	FORCEINLINE float GetHealAmount() const { return HealAmount; }
-
 	FORCEINLINE AItem* GetItemData() { return ItemReference; }
 };

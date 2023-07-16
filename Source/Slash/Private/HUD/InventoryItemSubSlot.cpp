@@ -4,11 +4,17 @@
 #include "HUD/InventoryItemSubSlot.h"
 #include "Components/Button.h"
 #include "Items/Item.h"
+#include "Items/Potion/PotionItem.h"
+#include "Character/SlashCharacter.h"
 
 
 void UInventoryItemSubSlot::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	OwningCharacter = Cast<ASlashCharacter>(GetOwningPlayerPawn());
+
+	UseButton->OnClicked.AddDynamic(this, &UInventoryItemSubSlot::UseButtonClick);
 }
 
 void UInventoryItemSubSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
@@ -20,7 +26,16 @@ void UInventoryItemSubSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent
 
 void UInventoryItemSubSlot::UseButtonClick()
 {
-
+	if (ItemReference && OwningCharacter)
+	{
+		APotionItem* Potion = Cast<APotionItem>(ItemReference->StaticClass());
+		if (Potion)
+		{
+			Potion->Use(OwningCharacter);
+		}
+		ItemReference->Use(OwningCharacter);
+		
+	}
 }
 
 

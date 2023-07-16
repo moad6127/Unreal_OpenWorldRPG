@@ -9,6 +9,7 @@
 
 class UButton;
 class AItem;
+class ASlashCharacter;
 UCLASS()
 class SLASH_API UInventoryItemSubSlot : public UUserWidget
 {
@@ -19,6 +20,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Inventory Slot")
 	AItem* ItemReference;
+
+	UPROPERTY(VisibleAnywhere, Category = "Inventory Slot")
+	ASlashCharacter* OwningCharacter;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* UseButton;

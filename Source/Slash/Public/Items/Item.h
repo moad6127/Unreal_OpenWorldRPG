@@ -12,6 +12,7 @@ class USphereComponent;
 class UNiagaraSystem;
 class UNiagaraComponent;
 class UInventoryComponent;
+class ASlashCharacter;
 enum class EItemState : uint8
 {
 	EIS_Hovering,
@@ -35,7 +36,7 @@ public:
 	void SetQuantity(const int32 NewQuantity);
 
 	UFUNCTION(Category = Item)
-	virtual void Use(class ABaseCharacter* Character);
+	virtual void Use(ASlashCharacter* Character);
 
 	void ResetItemFlags();
 	/**

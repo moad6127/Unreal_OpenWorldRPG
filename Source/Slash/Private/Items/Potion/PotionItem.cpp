@@ -70,11 +70,14 @@ void APotionItem::EndFocus()
 	}
 }
 
-void APotionItem::Use(ABaseCharacter* Character)
+void APotionItem::Use(ASlashCharacter* Character)
 {
+	UE_LOG(LogTemp, Warning, TEXT("PotionUse"));
+	Super::Use(Character);
 	IPickupInterface* PickupInterface = Cast<IPickupInterface>(Character);
 	if (PickupInterface)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("PickupInterface : GetPotion"));
 		PickupInterface->GetPotion(this);
 	}
 }
