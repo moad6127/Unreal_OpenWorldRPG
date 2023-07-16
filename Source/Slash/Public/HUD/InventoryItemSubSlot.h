@@ -28,4 +28,6 @@ public:
 
 protected:
 	virtual void NativeConstruct() override;
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
+
 };

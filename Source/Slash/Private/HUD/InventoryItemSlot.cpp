@@ -10,6 +10,7 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "HUD/InventoryItemSubSlot.h"
+#include "GameFramework/PlayerController.h"
 
 void UInventoryItemSlot::NativeOnInitialized()
 {
@@ -75,10 +76,21 @@ FReply UInventoryItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, 
     {
         if (SubSlotClass && ItemReference)
         {
-            UE_LOG(LogTemp, Warning, TEXT("SlotClick"));
+            
+            FVector2D MousePosition = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+            APlayerController* Controller = GetOwningLocalPlayer()->GetPlayerController(GetWorld());
+            Controller->GetMousePosition(MousePosition.X, MousePosition.Y);
             UInventoryItemSubSlot* SubMenu = CreateWidget<UInventoryItemSubSlot>(this, SubSlotClass);
             SubMenu->ItemReference = ItemReference;
-            AddToViewport();
+            
+            SubMenu->SetDesiredSizeInViewport(FVector2D(200.f, 200.f));
+            UE_LOG(LogTemp, Warning, TEXT("MousePosition : %d, %d"),MousePosition.X,MousePosition.Y);
+            SubMenu->SetPositionInViewport(MousePosition);
+            
+            SubMenu->AddToViewport(10);
+
+            
+            
             return Reply.Unhandled();
         }
 

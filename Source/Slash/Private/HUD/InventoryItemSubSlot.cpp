@@ -11,6 +11,12 @@ void UInventoryItemSubSlot::NativeConstruct()
 	Super::NativeConstruct();
 }
 
+void UInventoryItemSubSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseLeave(InMouseEvent);
+	RemoveFromParent();
+}
+
 
 void UInventoryItemSubSlot::UseButtonClick()
 {
