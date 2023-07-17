@@ -44,7 +44,7 @@ void APotionItem::InitializePickup(const TSubclassOf<AItem> BaseClass, const int
 
 void APotionItem::InitializeDrop(AItem* ItemToDrop, const int32 InQuantity)
 {
-	ItemReference = ItemToDrop;
+	ItemReference = ItemToDrop->CreateItemCopy();
 
 	InQuantity <= 0 ? ItemReference->SetQuantity(1) : ItemReference->SetQuantity(InQuantity);
 

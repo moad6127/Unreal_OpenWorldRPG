@@ -46,7 +46,7 @@ void UInventoryItemSubSlot::DropButtonClick()
 {
 	if (ItemReference && OwningCharacter)
 	{
-		OwningCharacter->DropItem(ItemReference, ItemReference->Quantity);
+		OwningCharacter->DropItem(ItemReference, 1);
 
 	}
 }

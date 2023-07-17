@@ -90,7 +90,7 @@ int32 UInventoryComponent::RemoveAmountOfItem(AItem* ItemIn, int32 DesiredAmount
 	const int32 ActualAmountToRemove = FMath::Min(DesiredAmountToRemove, ItemIn->Quantity);
 
 	ItemIn->SetQuantity(ItemIn->Quantity - ActualAmountToRemove);
-
+	UE_LOG(LogTemp, Warning, TEXT("ItemIn Quantity : % d "), ItemIn->Quantity);
 	InventoryTotalWeight -= ActualAmountToRemove * ItemIn->GetItemSingleWeight();
 	OnInventoryUpdated.Broadcast();
 
