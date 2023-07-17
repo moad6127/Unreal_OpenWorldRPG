@@ -187,11 +187,11 @@ void ASlashCharacter::DropItem(AItem* ItemToDrop, const int32 QuantityToDrop)
 
 		const FVector SpawnLocation = GetActorLocation() + (GetActorForwardVector() * 50.f);
 		const FTransform SpawnTransform(GetActorRotation(), SpawnLocation);
-
-		const int32 RemoveQuantity = PlayerInventory->RemoveAmountOfItem(ItemToDrop, QuantityToDrop);
 		APotionItem* DropItem = GetWorld()->SpawnActor<APotionItem>(APotionItem::StaticClass(), SpawnTransform, SpawnParms);
 
+		const int32 RemoveQuantity = PlayerInventory->RemoveAmountOfItem(ItemToDrop, QuantityToDrop);
 		DropItem->InitializeDrop(ItemToDrop,RemoveQuantity);
+		UE_LOG(LogTemp, Warning, TEXT("Item Drop : %d "),RemoveQuantity);
 	}
 	else
 	{

@@ -15,6 +15,7 @@ void UInventoryItemSubSlot::NativeConstruct()
 	OwningCharacter = Cast<ASlashCharacter>(GetOwningPlayerPawn());
 
 	UseButton->OnClicked.AddDynamic(this, &UInventoryItemSubSlot::UseButtonClick);
+	DropButton->OnClicked.AddDynamic(this, &UInventoryItemSubSlot::DropButtonClick);
 }
 
 void UInventoryItemSubSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
@@ -34,7 +35,19 @@ void UInventoryItemSubSlot::UseButtonClick()
 			Potion->Use(OwningCharacter);
 		}
 		ItemReference->Use(OwningCharacter);
-		
+	}
+	else
+	{
+		RemoveFromParent();
+	}
+}
+
+void UInventoryItemSubSlot::DropButtonClick()
+{
+	if (ItemReference && OwningCharacter)
+	{
+		OwningCharacter->DropItem(ItemReference, ItemReference->Quantity);
+
 	}
 }
 
