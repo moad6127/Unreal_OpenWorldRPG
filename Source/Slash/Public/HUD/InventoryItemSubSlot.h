@@ -30,11 +30,17 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UButton* DropButton;
 
+	UPROPERTY(meta = (BindWidget))
+	UButton* DropAllButton;
+
 	UFUNCTION()
 	void UseButtonClick();
 
 	UFUNCTION()
 	void DropButtonClick();
+
+	UFUNCTION()
+	void DropAllButtonClick();
 
 protected:
 	virtual void NativeConstruct() override;

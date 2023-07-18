@@ -16,6 +16,7 @@ void UInventoryItemSubSlot::NativeConstruct()
 
 	UseButton->OnClicked.AddDynamic(this, &UInventoryItemSubSlot::UseButtonClick);
 	DropButton->OnClicked.AddDynamic(this, &UInventoryItemSubSlot::DropButtonClick);
+	DropAllButton->OnClicked.AddDynamic(this, &UInventoryItemSubSlot::DropAllButtonClick);
 }
 
 void UInventoryItemSubSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
@@ -47,7 +48,14 @@ void UInventoryItemSubSlot::DropButtonClick()
 	if (ItemReference && OwningCharacter)
 	{
 		OwningCharacter->DropItem(ItemReference, 1);
+	}
+}
 
+void UInventoryItemSubSlot::DropAllButtonClick()
+{
+	if (ItemReference && OwningCharacter)
+	{
+		OwningCharacter->DropItem(ItemReference, ItemReference->Quantity);
 	}
 }
 
