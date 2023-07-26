@@ -225,3 +225,29 @@ Enemy 클래스에 PawnSensing컴포넌트를 추가해서 Enemy의 정해진 �
 # *Item*
 
 
+------------------------------------------------------------------------------------------------
+
+## ***BreakableActor***
+
+![BreakableActor](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/f5ac9c60-5501-4591-a19d-c93c28b28366)
+
+- [헤더파일 주소](https://github.com/moad6127/Unreal_OpenWorldRPG/blob/master/Source/Slash/Public/Breakable/BreakableActor.h)
+- [CPP파일 주소](https://github.com/moad6127/Unreal_OpenWorldRPG/blob/master/Source/Slash/Private/Breakable/BreakableActor.cpp)
+
+Weapon에 FieldsSystem을 추가해서 Weapon이 BreakableActor에 Overlap 되었을때 프텍탈 시스템을 활용해 BreakableActor가 부서지도록 만들기
+
+
+![Weapon_OnBoxOverlap](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/c645718c-7585-47de-b79c-4f4682e974e4)
+> Weapon에 Actor가 Overlap되면 호출되는 함수 CreateFields에 BoxHitResult를 넘겨줘서 어느위치에 Overlap되었는지 알려준다.
+
+
+![Weapon_CreateFields](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/15c3c6c4-7dc0-471e-905c-7e9e6f109288)
+>  블루프린트에서 Overlap함수에서 넘어온 Result값을 사용해서 Fields의 Vector등을 설정후 생성시킨다.
+
+
+![BreakableActor_ChaosBreakEvent](https://github.com/moad6127/Unreal_OpenWorldRPG/assets/101626318/f65d42cb-6ed5-4d84-91ca-9300fac0feea)
+> Field로 힘이 들어올경우 액터가 Break되면서 호출되는 함수로 Treasure를 리스폰 시킨후 3초뒤에 사라지도록 만들었다.
+
+
+
+-----------------------------------------------------------------------------------------------
